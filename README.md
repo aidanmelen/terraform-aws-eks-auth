@@ -1,8 +1,5 @@
-[![Lint Status](https://github.com/aidanmelen/terraform-aws-eks-auth/workflows/Lint/badge.svg)](https://github.com/aidanmelen/terraform-aws-eks-auth/actions)
-[![Security Status](https://github.com/aidanmelen/terraform-aws-eks-auth/workflows/Security/badge.svg)](https://github.com/aidanmelen/terraform-aws-eks-auth/actions)
-[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Pre-Commit](https://github.com/aidanmelen/terraform-aws-eks-auth/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/aidanmelen/terraform-aws-eks-auth/actions/workflows/pre-commit.yaml)
 [![cookiecutter-tf-module](https://img.shields.io/badge/cookiecutter--tf--module-enabled-brightgreen)](https://github.com/aidanmelen/cookiecutter-tf-module)
-[![tflint](https://img.shields.io/badge/code--style-tflint-black)](https://github.com/terraform-linters/tflint)
 
 # terraform-aws-eks-auth
 
