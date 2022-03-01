@@ -53,8 +53,8 @@ resource "kubernetes_job_v1" "aws_auth" {
           name  = "aws-auth-init"
           image = "bitnami/kubectl:latest"
 
-          # Delete the `aws-auth` configmap that was created during attachment of AWS EKS compute nodes.
-          # This `aws-auth` data with be merged with a new aws-auth config map managed by this module.
+          # Delete the `aws-auth` configmap that was created by AWS EKS.
+          # This `aws-auth` data will be merged with a new aws-auth configmap managed by this module.
           command = ["/bin/sh", "-c", "kubectl delete configmap aws-auth --namespace kube-system"]
         }
         restart_policy = "Never"

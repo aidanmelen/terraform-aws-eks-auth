@@ -2,6 +2,10 @@ locals {
   name = "ex-${replace(basename(path.cwd), "_", "-")}"
 }
 
+################################################################################
+# EKS Module
+################################################################################
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = ">= 18.0.0"
@@ -18,10 +22,12 @@ module "eks" {
   }
 }
 
+################################################################################
+# AWS AUTH Module
+################################################################################
+
 module "aws_auth" {
   source = "../../"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
-
-  depends_on = [module.eks]
 }

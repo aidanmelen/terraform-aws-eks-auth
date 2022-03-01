@@ -5,6 +5,10 @@
 
 A Terraform module to manage [cluster authentication](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) (`aws-auth`) for an Elastic Kubernetes (EKS) cluster on AWS.
 
+This modules works similar to the [aws_auth](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v17.24.0/aws_auth.tf) support that was deprecated from the terraform-eks-module. The original approach for initializing the `aws-auth` ConfigMap used the `exec` resource to call `kubectl`. This solution can be problematic because it is OS specific and requires the host to have `kubectl` installed.
+
+This module improves on the original implementation by using a init Job to replace the original `aws_auth` ConfigMap with another managed by Terraform.
+
 ## Assumptions
 
 - You want to manage your AWS EKS cluster with the [terraform-aws-eks](https://github.com/terraform-aws-modules/terraform-aws-eks) module.
@@ -121,7 +125,7 @@ MIT Licensed. See [LICENSE](https://github.com/aidanmelen/terraform-aws-eks-auth
 
 | Name | Version |
 |------|---------|
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.8.0 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 1.11.1 |
 
 ## Modules
 
