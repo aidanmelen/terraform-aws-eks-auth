@@ -27,7 +27,7 @@ module "eks" {
   }
 }
 
-module "aws_auth" {
+module "eks_auth" {
   source = "../../"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
@@ -56,7 +56,7 @@ module "eks" {
   }
 }
 
-module "aws_auth" {
+module "eks_auth" {
   source = "../../"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
