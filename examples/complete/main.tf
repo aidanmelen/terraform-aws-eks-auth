@@ -22,12 +22,21 @@ module "eks" {
   }
 
   fargate_profiles = {
-    bar = {}
+    bar = {
+      selectors = [
+        {
+          namespace = "bar"
+          labels = {
+            Application = "bar"
+          }
+        }
+      ]
+    }
   }
 }
 
 ################################################################################
-# AWS AUTH Module
+# EKS Auth Module
 ################################################################################
 
 module "eks_auth" {

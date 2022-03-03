@@ -5,9 +5,9 @@
 
 A Terraform module to manage [cluster authentication](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) (`aws-auth`) for an Elastic Kubernetes (EKS) cluster on AWS.
 
-This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v17.24.0/aws_auth.tf) support that was deprecated from the terraform-eks-module. The original approach for initializing the `aws-auth` ConfigMap used the `exec` resource to call `kubectl`. This solution can be problematic because it is OS specific and requires the host to have `kubectl` installed.
+This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v17.24.0/aws_auth.tf) file that was deprecated from the terraform-eks-module. The original approach for initializing the `aws-auth` ConfigMap used the `exec` resource to call `kubectl`. This solution can be problematic because it is OS specific and requires the host to have `kubectl` installed.
 
-This module improves on the original implementation by using an init Job to replace the original `aws_auth` ConfigMap with another managed by Terraform.
+This module implements a pure Terraform solution by using an Kubernetes Job to replace the original `aws-auth` ConfigMap with another managed by Terraform.
 
 ## Usage
 
@@ -28,7 +28,7 @@ module "eks" {
 }
 
 module "eks_auth" {
-  source = "../../"
+  source = "aidanmelen/eks-auth/aws"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
 }
@@ -57,7 +57,7 @@ module "eks" {
 }
 
 module "eks_auth" {
-  source = "../../"
+  source = "aidanmelen/eks-auth/aws"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
 
@@ -99,7 +99,7 @@ build                          Build docker image
 install                        Install pre-commit
 test                           Test with Terratest
 test-basic                     Test Basic Example
-test-complete                  Test Basic Example
+test-complete                  Test Complete Example
 tests                          Lint and Test
 ```
 
@@ -141,7 +141,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_auth_additional_labels"></a> [aws\_auth\_additional\_labels](#input\_aws\_auth\_additional\_labels) | Additional kubernetes labels applied on aws-auth ConfigMap | `map(string)` | `{}` | no |
-| <a name="input_eks_aws_auth_configmap_yaml"></a> [eks\_aws\_auth\_configmap\_yaml](#input\_eks\_aws\_auth\_configmap\_yaml) | The `aws_auth_configmap_yaml` output from the `terraform-aws-eks` module. | `string` | `"  apiVersion: v1\n  kind: ConfigMap\n  metadata:\n    name: aws-auth\n    namespace: kube-system\n  data:\n    mapRoles: |\n      -\n"` | no |
+| <a name="input_eks_aws_auth_configmap_yaml"></a> [eks\_aws\_auth\_configmap\_yaml](#input\_eks\_aws\_auth\_configmap\_yaml) | The `aws_auth_configmap_yaml` output from the `terraform-aws-eks` module. | `string` | `"apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: aws-auth\n  namespace: kube-system\ndata:\n  mapRoles: |\n    -\n"` | no |
 | <a name="input_map_accounts"></a> [map\_accounts](#input\_map\_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(string)` | `[]` | no |
 | <a name="input_map_roles"></a> [map\_roles](#input\_map\_roles) | Additional IAM roles to add to the aws-auth configmap. | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_users"></a> [map\_users](#input\_map\_users) | Additional IAM users to add to the aws-auth configmap. | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
@@ -150,6 +150,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_config_map"></a> [config\_map](#output\_config\_map) | The `aws-auth` config map. |
-| <a name="output_config_map_yaml"></a> [config\_map\_yaml](#output\_config\_map\_yaml) | The `aws-auth` config map YAML. |
+| <a name="output_configmap"></a> [configmap](#output\_configmap) | The aws-auth configmap containing the provided roles, users and accounts merged with the eks roles used in cluster node groups/fargate profiles. |
+| <a name="output_configmap_yaml"></a> [configmap\_yaml](#output\_configmap\_yaml) | Formatted yaml output for the aws-auth configmap containing the provided roles, users and accounts merged with the eks roles used in cluster node groups/fargate profiles. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

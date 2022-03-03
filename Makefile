@@ -1,5 +1,4 @@
 NAME = terraform-aws-eks-auth
-VERSION = $(shell poetry version -s)
 
 SHELL := /bin/bash
 
@@ -33,7 +32,7 @@ test-basic:  ## Test Basic Example
 	go get github.com/gruntwork-io/terratest/modules/terraform
 	go test test/terraform_basic_test.go
 
-test-complete: ## Test Basic Example
+test-complete: ## Test Complete Example
 	go get github.com/gruntwork-io/terratest/modules/terraform
 	go test test/terraform_complete_test.go
 

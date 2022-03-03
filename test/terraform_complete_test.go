@@ -20,6 +20,10 @@ func TestTerraformHelloWorldExample(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// website::tag::3:: Run `terraform output` to get the values of output variables and check they have the expected values.
-	output := terraform.Output(t, terraformOptions, "hello_world")
-	assert.Equal(t, "Hello, World!", output)
+	outputMap := terraform.OutputMap(t, terraformOptions, "configmap")
+	expectedMap := map[string]string{
+		"foo": "bar",
+	}
+
+	assert.Equal(t, expectedMap, outputMap, "Map %q should match %q", expectedMap, outputMap)
 }

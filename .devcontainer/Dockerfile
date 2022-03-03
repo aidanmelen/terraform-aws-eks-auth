@@ -12,16 +12,18 @@ ENV GOROOT=/usr/local/go \
     PATH=/root/.tfenv/bin:${GOPATH}/bin:${GOROOT}/bin:${PATH}
 
 # Common
-RUN apt-get update && apt-get install -y curl unzip git python3-pip
+RUN apt-get update && apt-get install -y curl unzip git python3-pip zsh vim-tiny \
+ && mv /bin/vim.tiny /bin/vim
 
 # Golang
 RUN curl -sSL -o /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz" \
-&& tar -xzf /tmp/go.tar.gz -C /usr/local
+ && tar -xzf /tmp/go.tar.gz -C /usr/local \
+ && ${GOROOT}/bin/go install -v golang.org/x/tools/gopls@latest
 
 # Terraform
 RUN git clone https://github.com/tfutils/tfenv.git /root/.tfenv \
-&& tfenv install ${TERRAFORM_VERSION} \
-&& tfenv use $(ls /root/.tfenv/versions)
+ && tfenv install ${TERRAFORM_VERSION} \
+ && tfenv use $(ls /root/.tfenv/versions)
 
 # Terraform-Docs
 RUN curl -sSLo ./terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}/terraform-docs-${TERRAFORM_DOCS_VERSION}-$(uname)-amd64.tar.gz \
