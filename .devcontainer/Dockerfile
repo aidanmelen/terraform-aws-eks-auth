@@ -12,8 +12,7 @@ ENV GOROOT=/usr/local/go \
     PATH=/root/.tfenv/bin:${GOPATH}/bin:${GOROOT}/bin:${PATH}
 
 # Common
-RUN apt-get update && apt-get install -y curl unzip git python3-pip zsh vim-tiny \
- && mv /bin/vim.tiny /bin/vim
+RUN apt-get update && apt-get install -y curl unzip git python3-pip
 
 # Golang
 RUN curl -sSL -o /tmp/go.tar.gz "https://golang.org/dl/go${GO_VERSION}.linux-amd64.tar.gz" \
