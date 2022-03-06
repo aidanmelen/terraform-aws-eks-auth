@@ -4,8 +4,8 @@ repos:
   hooks:
     - id: terraform_fmt
       stages: [commit]
-    # - id: terraform_validate
-    #   stages: [commit]
+    - id: terraform_validate
+      stages: [commit]
     - id: terraform_tflint
       stages: [commit]
     - id: terraform_docs
