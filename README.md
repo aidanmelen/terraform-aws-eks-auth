@@ -142,6 +142,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_auth_additional_labels"></a> [aws\_auth\_additional\_labels](#input\_aws\_auth\_additional\_labels) | Additional kubernetes labels applied on aws-auth ConfigMap | `map(string)` | `{}` | no |
 | <a name="input_eks_aws_auth_configmap_yaml"></a> [eks\_aws\_auth\_configmap\_yaml](#input\_eks\_aws\_auth\_configmap\_yaml) | The `aws_auth_configmap_yaml` output from the `terraform-aws-eks` module. | `string` | `"apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: aws-auth\n  namespace: kube-system\ndata:\n  mapRoles: |\n    -\n"` | no |
+| <a name="input_kubectl_image_url"></a> [kubectl\_image\_url](#input\_kubectl\_image\_url) | Docker image name for the `kubectl` command line interface. | `string` | `"bitnami/kubectl:latest"` | no |
 | <a name="input_map_accounts"></a> [map\_accounts](#input\_map\_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(string)` | `[]` | no |
 | <a name="input_map_roles"></a> [map\_roles](#input\_map\_roles) | Additional IAM roles to add to the aws-auth configmap. | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_users"></a> [map\_users](#input\_map\_users) | Additional IAM users to add to the aws-auth configmap. | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
