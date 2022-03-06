@@ -51,7 +51,7 @@ resource "kubernetes_job_v1" "aws_auth" {
         service_account_name = kubernetes_service_account_v1.aws_auth.metadata.0.name
         container {
           name  = "aws-auth-init"
-          image = "bitnami/kubectl:latest"
+          image = var.kubectl_image_url
 
           # Delete the `aws-auth` configmap that was created by AWS EKS.
           # This `aws-auth` data will be merged with a new aws-auth configmap managed by this module.

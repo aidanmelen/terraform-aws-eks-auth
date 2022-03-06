@@ -44,3 +44,9 @@ variable "map_users" {
   }))
   default = []
 }
+
+variable "kubectl_image_url" {
+  description = "Docker image name for the `kubectl` command line interface."
+  type        = string
+  default     = "bitnami/kubectl:latest"
+}
