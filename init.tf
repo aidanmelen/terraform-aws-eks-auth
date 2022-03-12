@@ -28,7 +28,7 @@ resource "kubernetes_role_binding_v1" "aws_auth" {
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "Role"
-    name      = kubernetes_role_v1.aws_auth.metadata.0.name
+    name      = "kubernetes_role_v1.aws_auth.metadata.0.name"
   }
 
   subject {
@@ -65,6 +65,6 @@ resource "kubernetes_job_v1" "aws_auth" {
   wait_for_completion = true
 
   timeouts {
-    create = "5m"
+    create = "10m"
   }
 }

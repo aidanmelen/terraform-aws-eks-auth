@@ -31,6 +31,8 @@ module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
+
+  depends_on = [module.eks]
 }
 ```
 
@@ -86,6 +88,8 @@ module "eks_auth" {
     "777777777777",
     "888888888888",
   ]
+
+  depends_on = [module.eks]
 }
 ```
 

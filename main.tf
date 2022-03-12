@@ -1,4 +1,13 @@
-resource "kubernetes_config_map" "aws_auth" {
+locals {
+  merged_map_roles = yamlencode(
+    distinct(concat(
+      try(yamldecode(yamldecode(var.eks_aws_auth_configmap_yaml).data.mapRoles), []),
+      var.map_roles,
+    ))
+  )
+}
+
+resource "kubernetes_config_map_v1" "aws_auth" {
   depends_on = [kubernetes_job_v1.aws_auth]
 
   metadata {
@@ -16,12 +25,7 @@ resource "kubernetes_config_map" "aws_auth" {
   }
 
   data = {
-    mapRoles = yamlencode(
-      distinct(concat(
-        yamldecode(yamldecode(var.eks_aws_auth_configmap_yaml).data.mapRoles),
-        var.map_roles,
-      ))
-    )
+    mapRoles    = yamlencode(local.merged_map_roles)
     mapUsers    = yamlencode(var.map_users)
     mapAccounts = yamlencode(var.map_accounts)
   }

@@ -1,16 +1,7 @@
 variable "eks_aws_auth_configmap_yaml" {
   description = "The `aws_auth_configmap_yaml` output from the `terraform-aws-eks` module."
   type        = string
-  default     = <<-EOT
-  apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    name: aws-auth
-    namespace: kube-system
-  data:
-    mapRoles: |
-      -
-  EOT
+  default     = "{}"
 }
 
 variable "aws_auth_additional_labels" {

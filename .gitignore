@@ -40,3 +40,7 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Scratch
+examples/scratch
+test/terraform_scratch_test.go

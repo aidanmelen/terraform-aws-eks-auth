@@ -69,4 +69,6 @@ module "eks_auth" {
     "777777777777",
     "888888888888",
   ]
+
+  depends_on = [module.eks]
 }
