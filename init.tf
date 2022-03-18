@@ -17,10 +17,10 @@ resource "kubernetes_role_v1" "aws_auth" {
     api_groups     = [""]
     resources      = ["configmaps"]
     resource_names = ["aws-auth"]
-    verbs          = [
+    verbs = [
       "get",
       "patch",
-      "delete", # then replace with configmap managed with terraform 
+      "delete", # then replace with configmap managed with terraform
     ]
   }
 }

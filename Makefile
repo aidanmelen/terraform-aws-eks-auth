@@ -24,10 +24,11 @@ install: ## Install pre-commit
 	git add -A
 	pre-commit install
 
-lint: # Lint with pre-commit
-	docker run -it --rm -v "$$(pwd)":/module -v ~/.cache/pre-commit:/root/.cache/pre-commit --workdir /module $(NAME) pre-commit run --all && git add * && git add .*
+lint:  ## Lint with pre-commit
+	pre-commit run --all
+	git add -A
 
-test-setup:
+test-setup:  ## Setup Terratest
 	go get github.com/gruntwork-io/terratest/modules/terraform
 	go mod init test/terraform_basic_test.go
 	go mod tidy
