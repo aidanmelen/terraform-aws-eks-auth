@@ -2,6 +2,7 @@ resource "kubernetes_service_account_v1" "aws_auth" {
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 }
 
@@ -9,13 +10,18 @@ resource "kubernetes_role_v1" "aws_auth" {
   metadata {
     name      = "terraform:aws-auth-init"
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 
   rule {
     api_groups     = [""]
     resources      = ["configmaps"]
     resource_names = ["aws-auth"]
-    verbs          = ["delete"]
+    verbs = [
+      "get",
+      "patch",
+      "delete", # then replace with configmap managed with terraform
+    ]
   }
 }
 
@@ -23,6 +29,7 @@ resource "kubernetes_role_binding_v1" "aws_auth" {
   metadata {
     name      = kubernetes_service_account_v1.aws_auth.metadata.0.name
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 
   role_ref {
@@ -42,6 +49,7 @@ resource "kubernetes_job_v1" "aws_auth" {
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 
   spec {
@@ -50,12 +58,9 @@ resource "kubernetes_job_v1" "aws_auth" {
       spec {
         service_account_name = kubernetes_service_account_v1.aws_auth.metadata.0.name
         container {
-          name  = "aws-auth-init"
-          image = var.kubectl_image_url
-
-          # Delete the `aws-auth` configmap that was created by AWS EKS.
-          # This `aws-auth` data will be merged with a new aws-auth configmap managed by this module.
-          command = ["/bin/sh", "-c", "kubectl delete configmap aws-auth --namespace kube-system"]
+          name    = "aws-auth-init"
+          image   = "bitnami/kubectl:latest"
+          command = ["/bin/sh", "-c", local.kubectl_cmd]
         }
         restart_policy = "Never"
       }
@@ -65,6 +70,6 @@ resource "kubernetes_job_v1" "aws_auth" {
   wait_for_completion = true
 
   timeouts {
-    create = "5m"
+    create = "20m"
   }
 }

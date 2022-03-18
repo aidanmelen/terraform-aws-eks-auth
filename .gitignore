@@ -12,6 +12,7 @@ kubeconfig_*
 
 # Local .terraform directories
 **/.terraform/*
+.terraform
 
 # Terraform lockfile
 .terraform.lock.hcl
@@ -40,3 +41,9 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Terratest
+go.mod
+go.sum
+examples/scratch
+test/terraform_scratch_test.go

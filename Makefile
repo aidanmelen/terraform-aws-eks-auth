@@ -18,22 +18,30 @@ dev: ## Run docker dev container
 install: ## Install pre-commit
 	terraform init
 	cd examples/basic && terraform init && cd ../..
-	cd examples/complete && terraform init && cd ../..
+	cd examples/replace && terraform init && cd ../..
+	cd examples/patch && terraform init && cd ../..
 	git init
 	git add -A
 	pre-commit install
 
-lint: # Lint with pre-commit
-	docker run -it --rm -v "$$(pwd)":/module -v ~/.cache/pre-commit:/root/.cache/pre-commit --workdir /module $(NAME) pre-commit run --all && git add *
+lint:  ## Lint with pre-commit
+	pre-commit run --all
+	git add -A
 
-test: test-basic test-complete ## Test with Terratest
+test-setup:  ## Setup Terratest
+	go get github.com/gruntwork-io/terratest/modules/terraform
+	go mod init test/terraform_basic_test.go
+	go mod tidy
+
+test: test-basic test-replace test-patch ## Test with Terratest
 
 test-basic:  ## Test Basic Example
-	go get github.com/gruntwork-io/terratest/modules/terraform
-	go test test/terraform_basic_test.go
+	go test test/terraform_basic_test.go -timeout 1h -v
 
-test-complete: ## Test Complete Example
-	go get github.com/gruntwork-io/terratest/modules/terraform
-	go test test/terraform_complete_test.go
+test-replace: ## Test Replace Example
+	go test test/terraform_replace_test.go -timeout 1h -v
+
+test-patch: ## Test Patch Example
+	go test test/terraform_patch_test.go -timeout 1h -v
 
 tests: lint tests ## Lint and Test

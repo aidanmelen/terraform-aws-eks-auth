@@ -48,7 +48,12 @@ RUN curl -sSL -o /tmp/awscliv2.zip "https://awscli.amazonaws.com/awscli-exe-linu
 
 # Kubectl
 RUN curl -sSL -o /usr/bin/kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/${KUBERNETES_VERSION}/2021-07-05/bin/linux/amd64/kubectl \
- && chmod +x /usr/bin/kubectl
+ && chmod +x /usr/bin/kubectl \
+ && curl -sS https://webinstall.dev/k9s | bash
+
+# Dotfiles
+COPY .aliases /root/.aliases
+RUN echo "source /root/.aliases" >> /root/.bashrc
 
 # Clean
 RUN rm -rf /tmp/* && rm -rf /var/lib/apt/lists/*

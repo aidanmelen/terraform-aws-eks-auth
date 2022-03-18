@@ -17,6 +17,16 @@ module "eks" {
   eks_managed_node_groups = {
     foo = {}
   }
+
+  fargate_profiles = {
+    bar = {
+      selectors = [
+        {
+          namespace = "bar"
+        }
+      ]
+    }
+  }
 }
 
 ################################################################################
@@ -27,4 +37,32 @@ module "eks_auth" {
   source = "../../"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
+
+  kubectl_configmap_action = "replace"
+
+  map_roles = [
+    {
+      rolearn  = "arn:aws:iam::66666666666:role/role1"
+      username = "role1"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user1"
+      username = "user1"
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user2"
+      username = "user2"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_accounts = [
+    "777777777777",
+    "888888888888",
+  ]
 }
