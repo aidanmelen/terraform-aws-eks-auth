@@ -14,7 +14,7 @@ locals {
 
   kubectl_cmd = (
     var.kubectl_configmap_action == "patch" ?
-    "kubectl patch configmap/aws-auth --patch --patch \"${local.aws_auth_configmap_yaml}\" -n kube-system" :
+    "kubectl patch configmap/aws-auth --patch \"${local.aws_auth_configmap_yaml}\" -n kube-system" :
     "kubectl delete configmap/aws-auth -n kube-system"
   )
 

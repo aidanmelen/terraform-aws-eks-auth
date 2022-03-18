@@ -18,6 +18,7 @@ resource "kubernetes_role_v1" "aws_auth" {
     resources      = ["configmaps"]
     resource_names = ["aws-auth"]
     verbs          = [
+      "get",
       "patch",
       "delete", # then replace with configmap managed with terraform 
     ]
@@ -61,7 +62,7 @@ resource "kubernetes_job_v1" "aws_auth" {
           image   = "bitnami/kubectl:latest"
           command = ["/bin/sh", "-c", local.kubectl_cmd]
         }
-        restart_policy = "OnFailure"
+        restart_policy = "Never"
       }
     }
   }

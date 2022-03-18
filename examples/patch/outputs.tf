@@ -23,3 +23,7 @@ output "map_accounts" {
   value       = module.eks_auth.map_accounts
 }
 
+output "aws_auth_configmap_yaml" {
+  description = "Formatted yaml output for base aws-auth configmap containing roles used in cluster node groups/fargate profiles, users, and accounts."
+  value       = module.eks_auth.aws_auth_configmap_yaml
+}
