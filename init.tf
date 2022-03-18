@@ -2,6 +2,7 @@ resource "kubernetes_service_account_v1" "aws_auth" {
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 }
 
@@ -9,13 +10,17 @@ resource "kubernetes_role_v1" "aws_auth" {
   metadata {
     name      = "terraform:aws-auth-init"
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 
   rule {
     api_groups     = [""]
     resources      = ["configmaps"]
     resource_names = ["aws-auth"]
-    verbs          = ["delete"]
+    verbs          = [
+      "patch",
+      "delete", # then replace with configmap managed with terraform 
+    ]
   }
 }
 
@@ -23,12 +28,13 @@ resource "kubernetes_role_binding_v1" "aws_auth" {
   metadata {
     name      = kubernetes_service_account_v1.aws_auth.metadata.0.name
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "Role"
-    name      = "kubernetes_role_v1.aws_auth.metadata.0.name"
+    name      = kubernetes_role_v1.aws_auth.metadata.0.name
   }
 
   subject {
@@ -42,6 +48,7 @@ resource "kubernetes_job_v1" "aws_auth" {
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
+    labels    = local.k8s_labels
   }
 
   spec {
@@ -50,14 +57,11 @@ resource "kubernetes_job_v1" "aws_auth" {
       spec {
         service_account_name = kubernetes_service_account_v1.aws_auth.metadata.0.name
         container {
-          name  = "aws-auth-init"
-          image = "bitnami/kubectl:latest"
-
-          # Delete the `aws-auth` configmap that was created by AWS EKS.
-          # This `aws-auth` data will be merged with a new aws-auth configmap managed by this module.
-          command = ["/bin/sh", "-c", "kubectl delete configmap aws-auth --namespace kube-system"]
+          name    = "aws-auth-init"
+          image   = "bitnami/kubectl:latest"
+          command = ["/bin/sh", "-c", local.kubectl_cmd]
         }
-        restart_policy = "Never"
+        restart_policy = "OnFailure"
       }
     }
   }
@@ -65,6 +69,6 @@ resource "kubernetes_job_v1" "aws_auth" {
   wait_for_completion = true
 
   timeouts {
-    create = "10m"
+    create = "20m"
   }
 }

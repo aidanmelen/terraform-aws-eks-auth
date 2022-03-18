@@ -12,6 +12,7 @@ kubeconfig_*
 
 # Local .terraform directories
 **/.terraform/*
+.terraform
 
 # Terraform lockfile
 .terraform.lock.hcl
@@ -41,6 +42,8 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-# Scratch
+# Terratest
+go.mod
+go.sum
 examples/scratch
 test/terraform_scratch_test.go

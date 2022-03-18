@@ -5,9 +5,7 @@
 
 A Terraform module to manage [cluster authentication](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) (`aws-auth`) for an Elastic Kubernetes (EKS) cluster on AWS.
 
-This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v17.24.0/aws_auth.tf) file that was deprecated from the terraform-eks-module. The original approach for initializing the `aws-auth` ConfigMap used the `exec` resource to call `kubectl`. This solution can be problematic because it is OS specific and requires the host to have `kubectl` installed.
-
-This module implements a pure Terraform solution by using an Kubernetes Job to replace the original `aws-auth` ConfigMap with another managed by Terraform.
+This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v17.24.0/aws_auth.tf) file that was deprecated from the [terraform-eks-module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest). The original approach for initializing the `aws-auth` ConfigMap used the `exec` resource to call `kubectl`. This solution can be problematic because it requires the host to have `kubectl` installed. This module implements a pure Terraform solution by using an Kubernetes Job to replace or patch the `aws-auth` ConfigMap
 
 ## Usage
 
@@ -31,14 +29,12 @@ module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
-
-  depends_on = [module.eks]
 }
 ```
 
-### complete example
+### replace example
 
-A complete example can be found at [examples/complete](examples/complete).
+In the `replace` example, the aws-auth configmap will be replaced with a new configmap managed with Terraform.
 
 ```hcl
 module "eks" {
@@ -54,7 +50,13 @@ module "eks" {
   }
 
   fargate_profiles = {
-    bar = {}
+    bar = {
+      selectors = [
+        {
+          namespace = "bar"
+        }
+      ]
+    }
   }
 }
 
@@ -62,6 +64,8 @@ module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
 
   eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
+
+  kubectl_configmap_action = "replace"
 
   map_roles = [
     {
@@ -88,10 +92,75 @@ module "eks_auth" {
     "777777777777",
     "888888888888",
   ]
-
-  depends_on = [module.eks]
 }
 ```
+
+The full replace example can be found at [examples/replace](examples/replace).
+
+## patch example
+
+In the `patch` example, the aws-auth configmap will be patched with additional roles, users, and accounts.
+
+```hcl
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = ">= 18.0.0"
+
+  cluster_name = var.name
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = module.vpc.private_subnets
+
+  eks_managed_node_groups = {
+    foo = {}
+  }
+
+  fargate_profiles = {
+    bar = {
+      selectors = [
+        {
+          namespace = "bar"
+        }
+      ]
+    }
+  }
+}
+
+module "eks_auth" {
+  source = "aidanmelen/eks-auth/aws"
+
+  eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
+
+  kubectl_configmap_action = "patch"
+
+  map_roles = [
+    {
+      rolearn  = "arn:aws:iam::66666666666:role/role1"
+      username = "role1"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user1"
+      username = "user1"
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user2"
+      username = "user2"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_accounts = [
+    "777777777777",
+    "888888888888",
+  ]
+}
+```
+
+The full patch example can be found at [examples/patch](examples/patch).
 
 ## Makefile Targets
 

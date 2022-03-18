@@ -12,3 +12,8 @@ output "map_accounts" {
   description = "The aws-auth map accounts."
   value       = var.map_accounts
 }
+
+output "aws_auth_configmap_yaml" {
+  description = "Formatted yaml output for base aws-auth configmap containing roles used in cluster node groups/fargate profiles, users, and accounts."
+  value = local.aws_auth_configmap_yaml
+}

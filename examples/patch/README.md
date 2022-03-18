@@ -1,6 +1,6 @@
-# Terraform Complete Example
+# Terraform Patch Example
 
-This folder contains the the "complete" example of how to run this module.
+In the `patch` example, the aws-auth configmap will be patched with additional roles, users, and accounts.
 
 ## Running this module manually
 
