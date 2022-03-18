@@ -42,6 +42,6 @@ test-replace: ## Test Replace Example
 	go test test/terraform_replace_test.go -timeout 1h -v
 
 test-patch: ## Test Patch Example
-	go test test/terraform_replace_test.go -timeout 1h -v
+	go test test/terraform_patch_test.go -timeout 1h -v
 
 tests: lint tests ## Lint and Test
