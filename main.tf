@@ -118,10 +118,11 @@ resource "kubernetes_job_v1" "aws_auth_init_replace" {
     update = "10m"
   }
 
+  # This will prevent the aws-auth configmap from being deleted and replaced when the EKS cluster version changes.
   lifecycle {
     ignore_changes = [
-      # This will prevent the aws-auth configmap from being deleted and replaced when the EKS cluster version changes.
-      image,
+      metadata,
+      spec,
     ]
   }
 }
@@ -177,5 +178,5 @@ resource "kubernetes_config_map_v1" "aws_auth" {
     mapAccounts = yamlencode(var.map_accounts)
   }
 
-  depends_on = [kubernetes_job_v1.aws_auth_init]
+  depends_on = [kubernetes_job_v1.aws_auth_init_replace]
 }

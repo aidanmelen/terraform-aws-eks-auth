@@ -22,6 +22,7 @@ install: ## Install pre-commit
 	cd examples/patch && terraform init
 	git init
 	git add -A
+	tflint --init
 	pre-commit install
 
 lint:  ## Lint with pre-commit
