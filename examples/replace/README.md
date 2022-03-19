@@ -30,7 +30,7 @@ The `aws-auth` configmap will be replaced with a new configmap merged with the a
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.5.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.6.0 |
 
 ## Modules
 
