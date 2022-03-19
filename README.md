@@ -81,16 +81,16 @@ module "eks_auth" {
 ## Makefile Targets
 
 ```text
-help                           This help.
-build                          Build docker image
-dev                            Run docker dev container
-install                        Install pre-commit
-lint                           Lint with pre-commit
-test-setup                     Setup Terratest
-tests                          Test with Terratest
-test-basic                     Test Basic Example
-test-replace                   Test Replace Example
-test-patch                     Test Patch Example
+help                 This help.
+build                Build docker image
+dev                  Run docker dev container
+install              Install pre-commit
+lint                 Lint with pre-commit
+test-setup           Setup Terratest
+tests                Test with Terratest
+test-basic           Test Basic Example
+test-replace         Test Replace Example
+test-patch           Test Patch Example
 ```
 
 ## License
