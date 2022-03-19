@@ -1,14 +1,25 @@
-variable "eks_aws_auth_configmap_yaml" {
-  description = "The `aws_auth_configmap_yaml` output from the `terraform-aws-eks` module."
-  type        = string
-  default     = "{}"
+variable "eks" {
+  description = "The outputs from the `terraform-aws-eks` module."
+  type        = any
 }
 
-variable "kubectl_configmap_action" {
+variable "image_name" {
+  description = "Docker image name for the aws-auth-init job. The image must have the `kubectl` command line interface installed."
+  type        = string
+  default     = "bitnami/kubectl"
+}
+
+variable "image_tag" {
+  description = "Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21)."
+  type        = string
+  default     = ""
+}
+
+variable "init_action" {
   description = <<EOT
-  Determines how aws-auth configmap will be initialized.
+  Determines how the aws-auth configmap will be initialized.
   On `replace`, the aws-auth configmap will be replaced with a new configmap managed with Terraform.
-  On `patch`, the aws-auth configmap will be patched with additional roles, users, and accounts.
+  On `patch`, the aws-auth configmap will be patched in-place with additional roles, users, and accounts.
   EOT
   type        = string
   default     = "replace"
@@ -16,20 +27,14 @@ variable "kubectl_configmap_action" {
   validation {
     condition = contains(
       ["replace", "patch"],
-      var.kubectl_configmap_action
+      var.init_action
     )
     error_message = "Must be one either `replace` or `patch`."
   }
 }
 
-variable "kubectl_image_url" {
-  description = "Docker image name for the `kubectl` command line interface."
-  type        = string
-  default     = "bitnami/kubectl:latest"
-}
-
-variable "aws_auth_additional_labels" {
-  description = "Additional kubernetes labels applied on aws-auth ConfigMap"
+variable "k8s_additional_labels" {
+  description = "Additional kubernetes labels."
   default     = {}
   type        = map(string)
 }

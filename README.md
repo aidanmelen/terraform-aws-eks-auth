@@ -27,14 +27,13 @@ module "eks" {
 
 module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
-
-  eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
+  eks    = module.eks
 }
 ```
 
 ### replace example
 
-In the `replace` example, the aws-auth configmap will be replaced with a new configmap managed with Terraform.
+In the replace example, the aws-auth configmap will be replaced with a new configmap managed with Terraform.
 
 ```hcl
 module "eks" {
@@ -63,9 +62,7 @@ module "eks" {
 module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
 
-  eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
-
-  kubectl_configmap_action = "replace"
+  eks = module.eks
 
   map_roles = [
     {
@@ -99,7 +96,7 @@ The full replace example can be found at [examples/replace](examples/replace).
 
 ## patch example
 
-In the `patch` example, the aws-auth configmap will be patched with additional roles, users, and accounts.
+In the patch` xample, the aws-auth configmap will be patched with additional roles, users, and accounts.
 
 ```hcl
 module "eks" {
@@ -128,9 +125,8 @@ module "eks" {
 module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
 
-  eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
-
-  kubectl_configmap_action = "patch"
+  eks         = module.eks
+  init_action = "patch"
 
   map_roles = [
     {
@@ -187,7 +183,7 @@ MIT Licensed. See [LICENSE](https://github.com/aidanmelen/terraform-aws-eks-auth
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 1.11.1 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.7.0 |
 
 ## Providers
 
@@ -204,19 +200,20 @@ No modules.
 | Name | Type |
 |------|------|
 | [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
-| [kubernetes_job_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
-| [kubernetes_role_binding_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
-| [kubernetes_role_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
-| [kubernetes_service_account_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |
+| [kubernetes_job_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
+| [kubernetes_role_binding_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
+| [kubernetes_role_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
+| [kubernetes_service_account_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_aws_auth_additional_labels"></a> [aws\_auth\_additional\_labels](#input\_aws\_auth\_additional\_labels) | Additional kubernetes labels applied on aws-auth ConfigMap | `map(string)` | `{}` | no |
-| <a name="input_eks_aws_auth_configmap_yaml"></a> [eks\_aws\_auth\_configmap\_yaml](#input\_eks\_aws\_auth\_configmap\_yaml) | The `aws_auth_configmap_yaml` output from the `terraform-aws-eks` module. | `string` | `"{}"` | no |
-| <a name="input_kubectl_configmap_action"></a> [kubectl\_configmap\_action](#input\_kubectl\_configmap\_action) | Determines how aws-auth configmap will be initialized.<br>  On `replace`, the aws-auth configmap will be replaced with a new configmap managed with Terraform.<br>  On `patch`, the aws-auth configmap will be patched with additional roles, users, and accounts. | `string` | `"replace"` | no |
-| <a name="input_kubectl_image_url"></a> [kubectl\_image\_url](#input\_kubectl\_image\_url) | Docker image name for the `kubectl` command line interface. | `string` | `"bitnami/kubectl:latest"` | no |
+| <a name="input_eks"></a> [eks](#input\_eks) | The outputs from the `terraform-aws-eks` module. | `any` | n/a | yes |
+| <a name="input_image_name"></a> [image\_name](#input\_image\_name) | Docker image name for the aws-auth-init job. The image must have the `kubectl` command line interface installed. | `string` | `"bitnami/kubectl"` | no |
+| <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21). | `string` | `""` | no |
+| <a name="input_init_action"></a> [init\_action](#input\_init\_action) | Determines how the aws-auth configmap will be initialized.<br>  On `replace`, the aws-auth configmap will be replaced with a new configmap managed with Terraform.<br>  On `patch`, the aws-auth configmap will be patched in-place with additional roles, users, and accounts. | `string` | `"replace"` | no |
+| <a name="input_k8s_additional_labels"></a> [k8s\_additional\_labels](#input\_k8s\_additional\_labels) | Additional kubernetes labels. | `map(string)` | `{}` | no |
 | <a name="input_map_accounts"></a> [map\_accounts](#input\_map\_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(string)` | `[]` | no |
 | <a name="input_map_roles"></a> [map\_roles](#input\_map\_roles) | Additional IAM roles to add to the aws-auth configmap. | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_users"></a> [map\_users](#input\_map\_users) | Additional IAM users to add to the aws-auth configmap. | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
@@ -225,7 +222,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_aws_auth_configmap_yaml"></a> [aws\_auth\_configmap\_yaml](#output\_aws\_auth\_configmap\_yaml) | Formatted yaml output for base aws-auth configmap containing roles used in cluster node groups/fargate profiles, users, and accounts. |
+| <a name="output_aws_auth_configmap_yaml"></a> [aws\_auth\_configmap\_yaml](#output\_aws\_auth\_configmap\_yaml) | Formatted yaml output for aws-auth configmap. |
 | <a name="output_map_accounts"></a> [map\_accounts](#output\_map\_accounts) | The aws-auth map accounts. |
 | <a name="output_map_roles"></a> [map\_roles](#output\_map\_roles) | The aws-auth map roles merged with the eks cluster node group and fargate profile roles. |
 | <a name="output_map_users"></a> [map\_users](#output\_map\_users) | The aws-auth map users. |

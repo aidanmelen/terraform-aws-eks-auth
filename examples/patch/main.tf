@@ -36,9 +36,8 @@ module "eks" {
 module "eks_auth" {
   source = "../../"
 
-  eks_aws_auth_configmap_yaml = module.eks.aws_auth_configmap_yaml
-
-  kubectl_configmap_action = "patch"
+  eks         = module.eks
+  init_action = "patch"
 
   map_roles = [
     {
