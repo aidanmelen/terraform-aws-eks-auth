@@ -96,7 +96,7 @@ resource "kubernetes_role_binding_v1" "aws_auth_init" {
 ################################################################################
 
 resource "kubernetes_job_v1" "aws_auth_init_replace" {
-  count = var.should_patch_aws_auth_configmap == false ? 1 : 0
+  count = var.patch == false ? 1 : 0
 
   metadata {
     name      = "aws-auth-init"
@@ -136,7 +136,7 @@ resource "kubernetes_job_v1" "aws_auth_init_replace" {
 }
 
 resource "kubernetes_job_v1" "aws_auth_init_patch" {
-  count = var.should_patch_aws_auth_configmap ? 1 : 0
+  count = var.patch ? 1 : 0
 
   metadata {
     name      = "aws-auth-init"
@@ -172,7 +172,7 @@ resource "kubernetes_job_v1" "aws_auth_init_patch" {
 ################################################################################
 
 resource "kubernetes_config_map_v1" "aws_auth" {
-  count = var.should_patch_aws_auth_configmap == false ? 1 : 0
+  count = var.patch == false ? 1 : 0
 
   metadata {
     name      = "aws-auth"

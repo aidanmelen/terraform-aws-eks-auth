@@ -47,7 +47,7 @@ variable "map_users" {
   default = []
 }
 
-variable "should_patch_aws_auth_configmap" {
+variable "patch" {
   description = "Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts."
   type        = bool
   default     = false
