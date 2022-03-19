@@ -12,7 +12,7 @@ module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
   eks    = module.eks
 
-  should_patch_aws_auth_configmap = true
+  patch = true
 
   map_roles = [
     {
