@@ -1,6 +1,6 @@
 # Terraform Replace Example
 
-In the `replace` example, the aws-auth configmap will be replaced with a new configmap managed with Terraform.
+The `aws-auth` configmap will be replaced with a new configmap merged with the additional roles, users, and accounts.
 
 ## Running this module manually
 

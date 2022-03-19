@@ -33,7 +33,7 @@ test-setup:  ## Setup Terratest
 	go mod init test/terraform_basic_test.go
 	go mod tidy
 
-test: test-basic test-replace test-patch ## Test with Terratest
+tests: test-basic test-replace test-patch ## Test with Terratest
 
 test-basic:  ## Test Basic Example
 	go test test/terraform_basic_test.go -timeout 1h -v
@@ -43,5 +43,3 @@ test-replace: ## Test Replace Example
 
 test-patch: ## Test Patch Example
 	go test test/terraform_patch_test.go -timeout 1h -v
-
-tests: lint tests ## Lint and Test
