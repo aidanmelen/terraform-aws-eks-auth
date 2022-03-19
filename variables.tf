@@ -18,7 +18,7 @@ variable "image_tag" {
 variable "init_action" {
   description = <<EOT
   Determines how the aws-auth configmap will be initialized.
-  On `replace`, the aws-auth configmap will be replaced with a new configmap managed with Terraform.
+  On `replace`, the aws-auth configmap will be replaced with a new configmap merged with the additional roles, users, and accounts.
   On `patch`, the aws-auth configmap will be patched in-place with additional roles, users, and accounts.
   EOT
   type        = string
