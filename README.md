@@ -83,13 +83,13 @@ module "eks_auth" {
 help                 This help.
 build                Build docker image
 dev                  Run docker dev container
-install              Install pre-commit
+install              Install project
 lint                 Lint with pre-commit
-test-setup           Setup Terratest
 tests                Test with Terratest
 test-basic           Test Basic Example
 test-replace         Test Replace Example
 test-patch           Test Patch Example
+clean                Clean project
 ```
 
 ## License
@@ -109,7 +109,8 @@ MIT Licensed. See [LICENSE](https://github.com/aidanmelen/terraform-aws-eks-auth
 
 | Name | Version |
 |------|---------|
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | 2.8.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.72 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.7.0 |
 
 ## Modules
 
@@ -120,10 +121,12 @@ No modules.
 | Name | Type |
 |------|------|
 | [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
-| [kubernetes_job_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
+| [kubernetes_job_v1.aws_auth_init_patch](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
+| [kubernetes_job_v1.aws_auth_init_replace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
 | [kubernetes_role_binding_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
 | [kubernetes_role_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
 | [kubernetes_service_account_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |
+| [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 
 ## Inputs
 

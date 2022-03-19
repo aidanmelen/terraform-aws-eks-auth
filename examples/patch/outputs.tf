@@ -3,7 +3,7 @@ output "fargate_profile_iam_role_arn" {
   value       = module.eks.fargate_profiles.bar.iam_role_arn
 }
 
-output "node_group_iam_role_arn" {
+output "managed_node_group_iam_role_arn" {
   description = "The Amazon Resource Name (ARN) specifying the IAM role for the managed node group"
   value       = module.eks.eks_managed_node_groups.foo.iam_role_arn
 }
@@ -21,4 +21,9 @@ output "map_roles" {
 output "map_users" {
   description = "The aws-auth map users"
   value       = module.eks_auth.map_users
+}
+
+output "self_managed_node_group_iam_role_arn" {
+  description = "The Amazon Resource Name (ARN) specifying the IAM role for the self managed node group"
+  value       = module.eks.self_managed_node_groups.boo.iam_role_arn
 }

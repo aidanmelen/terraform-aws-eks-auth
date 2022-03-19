@@ -1,4 +1,12 @@
 ################################################################################
+# Data
+################################################################################
+
+data "aws_eks_cluster" "cluster" {
+  name = var.eks.cluster_id
+}
+
+################################################################################
 # Locals
 ################################################################################
 
@@ -18,14 +26,8 @@ locals {
 
   aws_auth_init_image = join(":", [
     var.image_name,
-    var.image_tag == null ? try(var.eks.cluster_version, "latest") : var.image_tag
+    var.image_tag == null ? data.aws_eks_cluster.cluster.version : var.image_tag
   ])
-
-  aws_auth_init_cmd = (
-    var.should_patch_aws_auth_configmap ?
-    "kubectl patch configmap/aws-auth --patch \"${local.aws_auth_configmap_yaml}\" -n kube-system" :
-    "kubectl delete configmap/aws-auth -n kube-system"
-  )
 
   k8s_labels = merge(
     {
@@ -64,14 +66,14 @@ resource "kubernetes_role_v1" "aws_auth_init" {
     verbs = [
       "get",
       "patch",
-      "delete", # is used when replacing with pre-existing configmap with another managed with terraform
+      "delete", # is used when replacing the pre-existing configmap with another managed with terraform
     ]
   }
 }
 
 resource "kubernetes_role_binding_v1" "aws_auth_init" {
   metadata {
-    name      = kubernetes_service_account_v1.aws_auth_init.metadata.0.name
+    name      = kubernetes_service_account_v1.aws_auth_init.metadata[0].name
     namespace = "kube-system"
     labels    = local.k8s_labels
   }
@@ -79,12 +81,12 @@ resource "kubernetes_role_binding_v1" "aws_auth_init" {
   role_ref {
     api_group = "rbac.authorization.k8s.io"
     kind      = "Role"
-    name      = kubernetes_role_v1.aws_auth_init.metadata.0.name
+    name      = kubernetes_role_v1.aws_auth_init.metadata[0].name
   }
 
   subject {
     kind      = "ServiceAccount"
-    name      = kubernetes_service_account_v1.aws_auth_init.metadata.0.name
+    name      = kubernetes_service_account_v1.aws_auth_init.metadata[0].name
     namespace = "kube-system"
   }
 }
@@ -93,7 +95,9 @@ resource "kubernetes_role_binding_v1" "aws_auth_init" {
 # Kubernetes Job
 ################################################################################
 
-resource "kubernetes_job_v1" "aws_auth_init" {
+resource "kubernetes_job_v1" "aws_auth_init_replace" {
+  count = var.should_patch_aws_auth_configmap == false ? 1 : 0
+
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
@@ -104,11 +108,11 @@ resource "kubernetes_job_v1" "aws_auth_init" {
     template {
       metadata {}
       spec {
-        service_account_name = kubernetes_service_account_v1.aws_auth_init.metadata.0.name
+        service_account_name = kubernetes_service_account_v1.aws_auth_init.metadata[0].name
         container {
           name    = "aws-auth-init"
           image   = local.aws_auth_init_image
-          command = ["/bin/sh", "-c", local.aws_auth_init_cmd]
+          command = ["/bin/sh", "-c", "kubectl delete configmap/aws-auth -n kube-system"]
         }
         restart_policy = "Never"
       }
@@ -118,8 +122,48 @@ resource "kubernetes_job_v1" "aws_auth_init" {
   wait_for_completion = true
 
   timeouts {
-    create = "15m"
-    update = "15m"
+    create = "10m"
+    update = "10m"
+  }
+
+  # This will prevent the aws-auth configmap from being deleted and replaced when the EKS cluster version changes.
+  lifecycle {
+    ignore_changes = [
+      metadata,
+      spec,
+    ]
+  }
+}
+
+resource "kubernetes_job_v1" "aws_auth_init_patch" {
+  count = var.should_patch_aws_auth_configmap ? 1 : 0
+
+  metadata {
+    name      = "aws-auth-init"
+    namespace = "kube-system"
+    labels    = local.k8s_labels
+  }
+
+  spec {
+    template {
+      metadata {}
+      spec {
+        service_account_name = kubernetes_service_account_v1.aws_auth_init.metadata[0].name
+        container {
+          name    = "aws-auth-init"
+          image   = local.aws_auth_init_image
+          command = ["/bin/sh", "-c", "kubectl patch configmap/aws-auth --patch \"${local.aws_auth_configmap_yaml}\" -n kube-system"]
+        }
+        restart_policy = "Never"
+      }
+    }
+  }
+
+  wait_for_completion = true
+
+  timeouts {
+    create = "10m"
+    update = "10m"
   }
 }
 
@@ -142,5 +186,5 @@ resource "kubernetes_config_map_v1" "aws_auth" {
     mapAccounts = yamlencode(var.map_accounts)
   }
 
-  depends_on = [kubernetes_job_v1.aws_auth_init]
+  depends_on = [kubernetes_job_v1.aws_auth_init_replace]
 }
