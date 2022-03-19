@@ -14,6 +14,15 @@ module "eks" {
   vpc_id       = module.vpc.vpc_id
   subnet_ids   = module.vpc.private_subnets
 
+  self_managed_node_groups = {
+    boo = {
+      instance_type = "m5.large"
+      instance_market_options = {
+        market_type = "spot"
+      }
+    }
+  }
+
   eks_managed_node_groups = {
     foo = {}
   }
