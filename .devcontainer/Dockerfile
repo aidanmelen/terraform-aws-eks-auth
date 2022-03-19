@@ -9,7 +9,9 @@ ARG GO_VERSION="1.17.6" \
 
 ENV GOROOT=/usr/local/go \
     GOPATH=/go \
-    PATH=/root/.tfenv/bin:${GOPATH}/bin:${GOROOT}/bin:${PATH}
+    PATH=/root/.tfenv/bin:${GOPATH}/bin:${GOROOT}/bin:${PATH} \
+    LANGUAGE="C" \
+    LC_ALL="C"
 
 # Common
 RUN apt-get update && apt-get install -y curl unzip git python3-pip
