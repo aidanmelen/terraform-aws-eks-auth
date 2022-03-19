@@ -15,12 +15,6 @@ variable "image_tag" {
   default     = null
 }
 
-variable "should_patch_aws_auth_configmap" {
-  description = "Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts. Replace the aws-auth configmap by default."
-  type        = bool
-  default     = false
-}
-
 variable "k8s_additional_labels" {
   description = "Additional kubernetes labels."
   default     = {}
@@ -51,4 +45,10 @@ variable "map_users" {
     groups   = list(string)
   }))
   default = []
+}
+
+variable "should_patch_aws_auth_configmap" {
+  description = "Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts."
+  type        = bool
+  default     = false
 }

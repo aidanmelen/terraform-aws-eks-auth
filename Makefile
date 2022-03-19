@@ -25,6 +25,7 @@ install: ## Install pre-commit
 	pre-commit install
 
 lint:  ## Lint with pre-commit
+	git add -A
 	pre-commit run
 	git add -A
 

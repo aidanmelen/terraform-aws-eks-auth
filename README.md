@@ -136,7 +136,7 @@ No modules.
 | <a name="input_map_accounts"></a> [map\_accounts](#input\_map\_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(string)` | `[]` | no |
 | <a name="input_map_roles"></a> [map\_roles](#input\_map\_roles) | Additional IAM roles to add to the aws-auth configmap. | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_users"></a> [map\_users](#input\_map\_users) | Additional IAM users to add to the aws-auth configmap. | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
-| <a name="input_should_patch_aws_auth_configmap"></a> [should\_patch\_aws\_auth\_configmap](#input\_should\_patch\_aws\_auth\_configmap) | Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts. Replace the aws-auth configmap by default. | `bool` | `false` | no |
+| <a name="input_should_patch_aws_auth_configmap"></a> [should\_patch\_aws\_auth\_configmap](#input\_should\_patch\_aws\_auth\_configmap) | Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts. | `bool` | `false` | no |
 
 ## Outputs
 
