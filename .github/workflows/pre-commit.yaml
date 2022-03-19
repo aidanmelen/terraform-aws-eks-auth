@@ -39,8 +39,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install tflint AWS Rules
-        run: tflint --init
+      # - name: Install tflint AWS Rules
+      #   run: tflint --init
 
       - name: Terraform min/max versions
         id: minMax
