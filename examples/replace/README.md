@@ -2,6 +2,46 @@
 
 The `aws-auth` configmap will be replaced with a new configmap merged with the additional roles, users, and accounts.
 
+```hcl
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  ...
+}
+
+module "eks_auth" {
+  source = "aidanmelen/eks-auth/aws"
+  eks    = module.eks
+
+  should_patch_aws_auth_configmap = true
+
+  map_roles = [
+    {
+      rolearn  = "arn:aws:iam::66666666666:role/role1"
+      username = "role1"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user1"
+      username = "user1"
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user2"
+      username = "user2"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_accounts = [
+    "777777777777",
+    "888888888888",
+  ]
+}
+```
+
 ## Running this module manually
 
 1. Install [Terraform](https://www.terraform.io/) and make sure it's on your `PATH`.

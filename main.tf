@@ -1,4 +1,12 @@
 ################################################################################
+# Data
+################################################################################
+
+data "aws_eks_cluster" "cluster" {
+  name = var.eks.cluster_id
+}
+
+################################################################################
 # Locals
 ################################################################################
 
@@ -18,7 +26,7 @@ locals {
 
   aws_auth_init_image = join(":", [
     var.image_name,
-    var.image_tag == null ? try(var.eks.cluster_version, "latest") : var.image_tag
+    var.image_tag == null ? data.aws_eks_cluster.cluster.version : var.image_tag
   ])
 
   k8s_labels = merge(
