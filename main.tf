@@ -18,11 +18,11 @@ locals {
 
   aws_auth_init_image = join(":", [
     var.image_name,
-    var.image_tag != "" ? var.image_tag : try(var.eks.cluster_version, "latest")
+    var.image_tag == null ? try(var.eks.cluster_version, "latest") : var.image_tag
   ])
 
   aws_auth_init_cmd = (
-    var.init_action == "patch" ?
+    var.should_patch_aws_auth_configmap ?
     "kubectl patch configmap/aws-auth --patch \"${local.aws_auth_configmap_yaml}\" -n kube-system" :
     "kubectl delete configmap/aws-auth -n kube-system"
   )
@@ -128,7 +128,7 @@ resource "kubernetes_job_v1" "aws_auth_init" {
 ################################################################################
 
 resource "kubernetes_config_map_v1" "aws_auth" {
-  count = var.init_action == "replace" ? 1 : 0
+  count = var.should_patch_aws_auth_configmap == false ? 1 : 0
 
   metadata {
     name      = "aws-auth"

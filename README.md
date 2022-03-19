@@ -20,8 +20,7 @@ module "eks" {
 
 module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
-
-  eks = module.eks
+  eks    = module.eks
 
   map_roles = [
     {
@@ -51,7 +50,7 @@ module "eks_auth" {
 }
 ```
 
-## Patch Init Action
+## Patch ConfigMap
 
 The `aws-auth` configmap will be patched in-place with additional roles, users, and accounts. Please see [examples/patch](examples/patch) for more information.
 
@@ -64,9 +63,9 @@ module "eks" {
 
 module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
+  eks    = module.eks
 
-  eks         = module.eks
-  init_action = "patch"
+  should_patch_aws_auth_configmap = true
 
   map_roles = [
     {
@@ -132,12 +131,12 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_eks"></a> [eks](#input\_eks) | The outputs from the `terraform-aws-eks` module. | `any` | n/a | yes |
 | <a name="input_image_name"></a> [image\_name](#input\_image\_name) | Docker image name for the aws-auth-init job. The image must have the `kubectl` command line interface installed. | `string` | `"bitnami/kubectl"` | no |
-| <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21). | `string` | `""` | no |
-| <a name="input_init_action"></a> [init\_action](#input\_init\_action) | Determines how the aws-auth configmap will be initialized.<br><br>  On `replace`, the aws-auth configmap will be replaced with a new configmap merged with the additional roles, users, and accounts.<br><br>  On `patch`, the aws-auth configmap will be patched in-place with additional roles, users, and accounts. | `string` | `"replace"` | no |
+| <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21). | `string` | `null` | no |
 | <a name="input_k8s_additional_labels"></a> [k8s\_additional\_labels](#input\_k8s\_additional\_labels) | Additional kubernetes labels. | `map(string)` | `{}` | no |
 | <a name="input_map_accounts"></a> [map\_accounts](#input\_map\_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(string)` | `[]` | no |
 | <a name="input_map_roles"></a> [map\_roles](#input\_map\_roles) | Additional IAM roles to add to the aws-auth configmap. | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_users"></a> [map\_users](#input\_map\_users) | Additional IAM users to add to the aws-auth configmap. | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
+| <a name="input_should_patch_aws_auth_configmap"></a> [should\_patch\_aws\_auth\_configmap](#input\_should\_patch\_aws\_auth\_configmap) | Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts. Replace the aws-auth configmap by default. | `bool` | `false` | no |
 
 ## Outputs
 

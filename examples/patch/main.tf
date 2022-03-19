@@ -35,9 +35,9 @@ module "eks" {
 
 module "eks_auth" {
   source = "../../"
+  eks    = module.eks
 
-  eks         = module.eks
-  init_action = "patch"
+  should_patch_aws_auth_configmap = true
 
   map_roles = [
     {

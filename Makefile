@@ -25,7 +25,7 @@ install: ## Install pre-commit
 	pre-commit install
 
 lint:  ## Lint with pre-commit
-	pre-commit run --all
+	pre-commit run
 	git add -A
 
 test-setup:  ## Setup Terratest

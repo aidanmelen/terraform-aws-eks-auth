@@ -12,27 +12,13 @@ variable "image_name" {
 variable "image_tag" {
   description = "Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21)."
   type        = string
-  default     = ""
+  default     = null
 }
 
-variable "init_action" {
-  description = <<EOT
-  Determines how the aws-auth configmap will be initialized.
-
-  On `replace`, the aws-auth configmap will be replaced with a new configmap merged with the additional roles, users, and accounts.
-
-  On `patch`, the aws-auth configmap will be patched in-place with additional roles, users, and accounts.
-  EOT
-  type        = string
-  default     = "replace"
-
-  validation {
-    condition = contains(
-      ["replace", "patch"],
-      var.init_action
-    )
-    error_message = "Must be one either `replace` or `patch`."
-  }
+variable "should_patch_aws_auth_configmap" {
+  description = "Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts. Replace the aws-auth configmap by default."
+  type        = bool
+  default     = false
 }
 
 variable "k8s_additional_labels" {
