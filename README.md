@@ -17,39 +17,39 @@ The `aws-auth` configmap will be replaced with a new configmap merged with the a
 
 ```hcl
 module "eks" {
-source  = "terraform-aws-modules/eks/aws"
-...
+    source  = "terraform-aws-modules/eks/aws"
+    ...
 }
 
 module "eks_auth" {
-source = "aidanmelen/eks-auth/aws"
-eks    = module.eks
+    source = "aidanmelen/eks-auth/aws"
+    eks    = module.eks
 
-map_roles = [
-{
-rolearn  = "arn:aws:iam::66666666666:role/role1"
-username = "role1"
-groups   = ["system:masters"]
-},
-]
+    map_roles = [
+        {
+        rolearn  = "arn:aws:iam::66666666666:role/role1"
+        username = "role1"
+        groups   = ["system:masters"]
+        },
+    ]
 
-map_users = [
-{
-userarn  = "arn:aws:iam::66666666666:user/user1"
-username = "user1"
-groups   = ["system:masters"]
-},
-{
-userarn  = "arn:aws:iam::66666666666:user/user2"
-username = "user2"
-groups   = ["system:masters"]
-},
-]
+    map_users = [
+        {
+        userarn  = "arn:aws:iam::66666666666:user/user1"
+        username = "user1"
+        groups   = ["system:masters"]
+        },
+        {
+        userarn  = "arn:aws:iam::66666666666:user/user2"
+        username = "user2"
+        groups   = ["system:masters"]
+        },
+    ]
 
-map_accounts = [
-"777777777777",
-"888888888888",
-]
+    map_accounts = [
+        "777777777777",
+        "888888888888",
+    ]
 }
 ```
 
@@ -57,18 +57,18 @@ Please see [examples/complete](examples/complete) for more information.
 
 ## Patch ConfigMap
 
-The aws-auth configmap will be patched in-place with additional roles, users, and accounts.
+The aws-auth configmap will be patched in-place and will not be managed with Terraform state.
 
 ```hcl
 module "eks" {
-source  = "terraform-aws-modules/eks/aws"
-...
+    source  = "terraform-aws-modules/eks/aws"
+    ...
 }
 
 module "eks_auth" {
-source = "aidanmelen/eks-auth/aws"
-eks    = module.eks
-patch  = true
+    source = "aidanmelen/eks-auth/aws"
+    eks    = module.eks
+    patch  = true
 }
 ```
 
