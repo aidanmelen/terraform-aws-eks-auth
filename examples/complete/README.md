@@ -1,4 +1,4 @@
-# Terraform Replace Example
+# Terraform Complete Example
 
 The `aws-auth` configmap will be replaced with a new configmap merged with the additional roles, users, and accounts.
 
@@ -55,7 +55,7 @@ module "eks_auth" {
 1. Install [Terraform](https://www.terraform.io/) and make sure it's on your `PATH`.
 1. Install [Golang](https://golang.org/) and make sure this code is checked out into your `GOPATH`.
 1. `cd test`
-1. `go test terraform_replace_test.go -v`
+1. `go test terraform_complete_test.go -v`
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements

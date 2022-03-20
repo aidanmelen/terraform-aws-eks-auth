@@ -10,7 +10,7 @@ This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws
 
 ## Usage
 
-The `aws-auth` configmap will be replaced with a new configmap merged with the additional roles, users, and accounts. Please see [examples/replace](examples/replace) for more information.
+The `aws-auth` configmap will be replaced with a new configmap merged with the additional roles, users, and accounts. Please see [examples/complete](examples/complete) for more information.
 
 ```hcl
 module "eks" {
@@ -86,7 +86,7 @@ install              Install project
 lint                 Lint with pre-commit
 tests                Test with Terratest
 test-basic           Test Basic Example
-test-replace         Test Replace Example
+test-complete         Test Complete Example
 test-patch           Test Patch Example
 clean                Clean project
 ```
@@ -120,8 +120,8 @@ No modules.
 | Name | Type |
 |------|------|
 | [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
+| [kubernetes_job_v1.aws_auth_init_complete](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
 | [kubernetes_job_v1.aws_auth_init_patch](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
-| [kubernetes_job_v1.aws_auth_init_replace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
 | [kubernetes_role_binding_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
 | [kubernetes_role_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
 | [kubernetes_service_account_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |

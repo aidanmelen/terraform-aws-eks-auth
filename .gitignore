@@ -17,7 +17,7 @@ kubeconfig_*
 # Terraform lockfile
 *.terraform.lock.hcl
 # !examples/basic/.terraform.lock.hcl
-# !examples/replace/.terraform.lock.hcl
+# !examples/complete/.terraform.lock.hcl
 # !examples/patch/.terraform.lock.hcl
 
 # .tfstate files

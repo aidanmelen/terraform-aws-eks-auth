@@ -95,7 +95,7 @@ resource "kubernetes_role_binding_v1" "aws_auth_init" {
 # Kubernetes Job
 ################################################################################
 
-resource "kubernetes_job_v1" "aws_auth_init_replace" {
+resource "kubernetes_job_v1" "aws_auth_init_complete" {
   count = var.patch == false ? 1 : 0
 
   metadata {
@@ -186,5 +186,5 @@ resource "kubernetes_config_map_v1" "aws_auth" {
     mapAccounts = yamlencode(var.map_accounts)
   }
 
-  depends_on = [kubernetes_job_v1.aws_auth_init_replace]
+  depends_on = [kubernetes_job_v1.aws_auth_init_complete]
 }

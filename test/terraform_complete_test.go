@@ -7,10 +7,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestTerraformReplaceExample(t *testing.T) {
+func TestTerraformCompleteExample(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		// website::tag::1:: Set the path to the Terraform code that will be tested.
-		TerraformDir: "../examples/replace",
+		TerraformDir: "../examples/complete",
 	}
 
 	// website::tag::4:: Clean up resources with "terraform destroy" at the end of the test.
