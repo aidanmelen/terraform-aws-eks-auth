@@ -18,7 +18,7 @@ The roles, users, and accounts will be added to the `aws-auth` configmap and wil
 ```hcl
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
-  # ...
+  # insert the 15 required variables here
 }
 
 module "eks_auth" {
@@ -62,7 +62,7 @@ The aws-auth configmap will be patched in-place with `kubectl` and will not be m
 ```hcl
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
-  # ...
+  # insert the 15 required variables here
 }
 
 module "eks_auth" {
