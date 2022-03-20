@@ -1,15 +1,13 @@
-# Terraform Patch Example
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+
+# Patch Example
 
 The aws-auth configmap will be patched in-place with additional roles, users, and accounts.
 
 ```hcl
-module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  ...
-}
-
 module "eks_auth" {
-  source = "aidanmelen/eks-auth/aws"
+  source = "../../"
   eks    = module.eks
   patch  = true
 
@@ -44,10 +42,9 @@ module "eks_auth" {
 ## Running this module manually
 
 1. Install [Terraform](https://www.terraform.io/) and make sure it's on your `PATH`.
-2. Run `terraform init`.
-3. Run `terraform plan`.
-4. Run `terraform apply`.
-5. When you're done, run `terraform destroy`.
+1. Run `terraform init`.
+1. Run `terraform apply`.
+1. When you're done, run `terraform destroy`.
 
 ## Running automated tests against this module
 
@@ -56,7 +53,6 @@ module "eks_auth" {
 1. `cd test`
 1. `go test terraform_patch_test.go -v`
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
