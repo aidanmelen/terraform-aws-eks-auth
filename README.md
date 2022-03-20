@@ -76,25 +76,6 @@ module "eks_auth" {
 }
 ```
 
-## Makefile Targets
-
-```text
-help                 This help.
-build                Build docker image
-dev                  Run docker dev container
-install              Install project
-lint                 Lint with pre-commit
-tests                Test with Terratest
-test-basic           Test Basic Example
-test-complete         Test Complete Example
-test-patch           Test Patch Example
-clean                Clean project
-```
-
-## License
-
-MIT Licensed. See [LICENSE](https://github.com/aidanmelen/terraform-aws-eks-auth/tree/master/LICENSE) for full details.
-
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
@@ -149,3 +130,7 @@ No modules.
 | <a name="output_map_roles"></a> [map\_roles](#output\_map\_roles) | The aws-auth map roles merged with the eks cluster node group and fargate profile roles. |
 | <a name="output_map_users"></a> [map\_users](#output\_map\_users) | The aws-auth map users. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## License
+
+Apache 2 Licensed. See [LICENSE](https://github.com/aidanmelen/terraform-aws-eks-auth/tree/master/LICENSE) for full details.
