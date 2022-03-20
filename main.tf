@@ -11,25 +11,26 @@ data "aws_eks_cluster" "cluster" {
 ################################################################################
 
 locals {
-  merged_map_roles = distinct(concat(
-    try(yamldecode(yamldecode(var.eks.aws_auth_configmap_yaml).data.mapRoles), []),
-    var.map_roles,
-  ))
-
   aws_auth_configmap_yaml = templatefile("${path.module}/templates/aws_auth_cm.tpl",
     {
-      map_roles    = local.merged_map_roles
-      map_users    = var.map_users
-      map_accounts = var.map_accounts
+      eks_managed_role_arns                   = try([for group in var.eks.eks_managed_node_group : group.iam_role_arn], [])
+      self_managed_role_arns                  = try([for group in var.eks.self_managed_node_group : group.iam_role_arn if group.platform != "windows"], [])
+      win32_self_managed_role_arns            = try([for group in var.eks.self_managed_node_group : group.iam_role_arn if group.platform == "windows"], [])
+      fargate_profile_pod_execution_role_arns = try([for group in var.eks.fargate_profile : group.fargate_profile_pod_execution_role_arn], [])
+      map_roles                               = var.map_roles
+      map_users                               = var.map_users
+      map_accounts                            = var.map_accounts
     }
   )
+
+  merged_map_roles = yamldecode(local.aws_auth_configmap_yaml).data.mapRoles
 
   aws_auth_init_image = join(":", [
     var.image_name,
     var.image_tag == null ? data.aws_eks_cluster.cluster.version : var.image_tag
   ])
 
-  k8s_labels = merge(
+  k8s_additional_labels = merge(
     {
       "app.kubernetes.io/managed-by" = "Terraform"
       # / are replaced by . because label validator fails in this lib
@@ -48,7 +49,7 @@ resource "kubernetes_service_account_v1" "aws_auth_init" {
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
-    labels    = local.k8s_labels
+    labels    = local.k8s_additional_labels
   }
 }
 
@@ -56,7 +57,7 @@ resource "kubernetes_role_v1" "aws_auth_init" {
   metadata {
     name      = "terraform:aws-auth-init"
     namespace = "kube-system"
-    labels    = local.k8s_labels
+    labels    = local.k8s_additional_labels
   }
 
   rule {
@@ -75,7 +76,7 @@ resource "kubernetes_role_binding_v1" "aws_auth_init" {
   metadata {
     name      = kubernetes_service_account_v1.aws_auth_init.metadata[0].name
     namespace = "kube-system"
-    labels    = local.k8s_labels
+    labels    = local.k8s_additional_labels
   }
 
   role_ref {
@@ -101,7 +102,7 @@ resource "kubernetes_job_v1" "aws_auth_init_replace" {
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
-    labels    = local.k8s_labels
+    labels    = local.k8s_additional_labels
   }
 
   spec {
@@ -141,7 +142,7 @@ resource "kubernetes_job_v1" "aws_auth_init_patch" {
   metadata {
     name      = "aws-auth-init"
     namespace = "kube-system"
-    labels    = local.k8s_labels
+    labels    = local.k8s_additional_labels
   }
 
   spec {
@@ -177,11 +178,11 @@ resource "kubernetes_config_map_v1" "aws_auth" {
   metadata {
     name      = "aws-auth"
     namespace = "kube-system"
-    labels    = local.k8s_labels
+    labels    = local.k8s_additional_labels
   }
 
   data = {
-    mapRoles    = yamlencode(local.merged_map_roles)
+    mapRoles    = local.merged_map_roles
     mapUsers    = yamlencode(var.map_users)
     mapAccounts = yamlencode(var.map_accounts)
   }
