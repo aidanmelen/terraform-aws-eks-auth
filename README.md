@@ -6,9 +6,7 @@
 
 A Terraform module to manage [cluster authentication](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) (`aws-auth`) for an Elastic Kubernetes (EKS) cluster on AWS.
 
-This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v17.24.0/aws_auth.tf) file that was deprecated from the [terraform-eks-module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest). Instead of running `kubectl` with [local-exec](https://www.terraform.io/language/resources/provisioners/local-exec) resource, the `aws-auth` configmap is managed with `kubectl` running in a kuberetes job. As a result, this terraform can run without `kubectl` being installed on the host. 
-
-⚠️ Similiar to the EKS cluster add-ons, the kubernetes job will not run until at least one compute node is joined to the cluster.
+⚠️ The `aws-auth` configmap is managed with `kubectl` running in a kuberetes job. Similiar to the EKS cluster add-ons, the kubernetes job will not run until at least one compute node is joined to the cluster.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
