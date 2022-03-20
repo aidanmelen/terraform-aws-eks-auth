@@ -13,7 +13,7 @@ This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws
 
 # Usage
 
-The `aws-auth` configmap will be replaced with a new configmap merged with the additional roles, users, and accounts.
+The roles, users, and accounts will be added to the `aws-auth` configmap and will be managed with Terraform.
 
 ```hcl
 module "eks" {
@@ -57,7 +57,7 @@ Please see [examples/complete](examples/complete) for more information.
 
 ## Patch ConfigMap
 
-The aws-auth configmap will be patched in-place and will not be managed with Terraform state.
+The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform.
 
 ```hcl
 module "eks" {
