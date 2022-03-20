@@ -1,8 +1,15 @@
-# Terraform Basic Example
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+
+# Basic Example
 
 The `aws-auth` configmap will be replaced with a new configmap managed by Terraform.
 
 ```hcl
+locals {
+  name = "ex-${replace(basename(path.cwd), "_", "-")}"
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = ">= 18.0.0"
@@ -17,7 +24,7 @@ module "eks" {
 }
 
 module "eks_auth" {
-  source = "aidanmelen/eks-auth/aws"
+  source = "../../"
   eks    = module.eks
 }
 ```
@@ -36,7 +43,6 @@ module "eks_auth" {
 1. `cd test`
 1. `go test terraform_basic_test.go -v`
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |

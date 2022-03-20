@@ -1,0 +1,34 @@
+content: |-
+  {{ .Header }}
+
+  # Usage
+
+  The roles, users, and accounts will be added to the `aws-auth` configmap and will be managed with Terraform.
+
+  ```hcl
+  {{ include ".tfdocs.d/complete.tf.txt" }}
+  ```
+
+  Please see [examples/complete](examples/complete) for more information.
+
+  ## Patch ConfigMap
+
+  The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform.
+
+  ```hcl
+  {{ include ".tfdocs.d/patch.tf.txt" }}
+  ```
+
+  Please see [examples/patch](examples/patch) for more information.
+
+  {{ .Requirements }}
+
+  {{ .Providers }}
+
+  {{ .Modules }}
+
+  {{ .Resources }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}

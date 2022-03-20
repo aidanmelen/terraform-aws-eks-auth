@@ -10,14 +10,17 @@ This modules works similar to the [aws_auth.tf](https://github.com/terraform-aws
 
 ⚠️ Similiar to the EKS cluster add-ons, the kubernetes job will not run until at least one compute node is joined to the cluster.
 
-## Usage
+<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
-The `aws-auth` configmap will be replaced with a new configmap merged with the additional roles, users, and accounts. Please see [examples/complete](examples/complete) for more information.
+
+# Usage
+
+The roles, users, and accounts will be added to the `aws-auth` configmap and will be managed with Terraform.
 
 ```hcl
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  ...
+  source = "terraform-aws-modules/eks/aws"
+  # insert the 15 required variables here
 }
 
 module "eks_auth" {
@@ -52,52 +55,27 @@ module "eks_auth" {
 }
 ```
 
+Please see [examples/complete](examples/complete) for more information.
+
 ## Patch ConfigMap
 
-The `aws-auth` configmap will be patched in-place with additional roles, users, and accounts. Please see [examples/patch](examples/patch) for more information.
-
+The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform.
 
 ```hcl
 module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  ...
+  source = "terraform-aws-modules/eks/aws"
+  # insert the 15 required variables here
 }
 
 module "eks_auth" {
   source = "aidanmelen/eks-auth/aws"
   eks    = module.eks
   patch  = true
-
-  map_roles = [
-    {
-      rolearn  = "arn:aws:iam::66666666666:role/role1"
-      username = "role1"
-      groups   = ["system:masters"]
-    },
-  ]
 }
 ```
 
-## Makefile Targets
+Please see [examples/patch](examples/patch) for more information.
 
-```text
-help                 This help.
-build                Build docker image
-dev                  Run docker dev container
-install              Install project
-lint                 Lint with pre-commit
-tests                Test with Terratest
-test-basic           Test Basic Example
-test-complete         Test Complete Example
-test-patch           Test Patch Example
-clean                Clean project
-```
-
-## License
-
-MIT Licensed. See [LICENSE](https://github.com/aidanmelen/terraform-aws-eks-auth/tree/master/LICENSE) for full details.
-
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
@@ -151,3 +129,7 @@ No modules.
 | <a name="output_map_roles"></a> [map\_roles](#output\_map\_roles) | The aws-auth map roles merged with the eks cluster node group and fargate profile roles. |
 | <a name="output_map_users"></a> [map\_users](#output\_map\_users) | The aws-auth map users. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## License
+
+Apache 2 Licensed. See [LICENSE](https://github.com/aidanmelen/terraform-aws-eks-auth/tree/master/LICENSE) for full details.

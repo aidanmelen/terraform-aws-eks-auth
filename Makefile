@@ -9,10 +9,10 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
-build: ## Build docker image
+build: ## Build docker dev container
 	cd .devcontainer && docker build -f Dockerfile . -t $(NAME)
 
-dev: ## Run docker dev container
+run: ## Run docker dev container
 	docker run -it --rm -v "$$(pwd)":/workspaces/$(NAME) -v ~/.aws:/root/.aws -v ~/.cache/pre-commit:/root/.cache/pre-commit --workdir /workspaces/$(NAME) $(NAME) /bin/bash
 
 install: ## Install project
@@ -54,3 +54,11 @@ clean: ## Clean project
 	@rm -f examples/basic/.terraform.lock.hcl
 	@rm -f examples/complete/.terraform.lock.hcl
 	@rm -f examples/patch/.terraform.lock.hcl
+
+	@rm -rf .terraform
+	@rm -rf examples/basic/.terraform
+	@rm -rf examples/complete/.terraform
+	@rm -rf examples/patch/.terraform
+
+	@rm -f go.mod
+	@rm -f go.sum
