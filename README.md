@@ -14,10 +14,6 @@ The [terraform-aws-eks module examples](https://github.com/terraform-aws-modules
 
 This module improves on this approach by executing `kubectl` commands with a [kubernetes job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1). By default, the job will replace the `aws-auth` configmap with a new configmap managed in Terraform state.
 
-## Assumptions
-
-- You want to manage the AWS EKS cluster with the [terraform-aws-eks module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest).
-
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 
