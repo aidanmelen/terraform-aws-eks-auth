@@ -3,7 +3,7 @@
 
 # Basic Example
 
-The roles, users, and accounts will be merged with a new `aws-auth` configmap managed with Terraform state.
+The roles, users, and accounts will be merged with the cluster roles and added to a new `aws-auth` configmap managed with Terraform state.
 
 ```hcl
 locals {
