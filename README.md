@@ -10,14 +10,18 @@ A Terraform module to manage [cluster authentication](https://docs.aws.amazon.co
 
 The `aws-auth` configmap is automatically created on a new AWS EKS cluster when node groups or fargate profiles are joined. This is problematic because terraform resources cannot partily manage configmaps.
 
-The [terraform-aws-eks module](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v18.11.0/examples/complete/main.tf#L323-L336) examples get around this by using the [local-exec povisioner](https://www.terraform.io/language/resources/provisioners/local-exec) to patch the configmap. This requires the host to have `kubectl` installed; which is often not the case with remote operations in [Terraform Cloud](https://www.terraform.io/cloud-docs/run#remote-operations) and CI/CD pipelines.
+The [terraform-aws-eks module examples](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v18.11.0/examples/complete/main.tf#L323-L336) get around this by using the `local-exec` povisioner to patch `aws-auth` the configmap. This requires the host to have `kubectl` installed; which is often not the case with remote operations in [Terraform Cloud](https://www.terraform.io/cloud-docs/run#remote-operations) and CI/CD pipelines.
 
 This module improves on this approach by executing `kubectl` commands with a [kubernetes job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1). By default, the job will replace the `aws-auth` configmap with a new configmap managed in Terraform state.
+
+## Assumptions
+
+- You want to manage the AWS EKS cluster with the [terraform-aws-eks module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest).
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 
-# Usage
+## Usage
 
 The roles, users, and accounts will be merged with the cluster roles and added to a new `aws-auth` configmap managed with Terraform state.
 
