@@ -4,16 +4,22 @@
 
 # terraform-aws-eks-auth
 
-A Terraform module to manage [cluster authentication](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) (`aws-auth`) for an Elastic Kubernetes (EKS) cluster on AWS.
+A Terraform module to manage [cluster authentication](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) for an Elastic Kubernetes (EKS) cluster on AWS.
 
-⚠️ The `aws-auth` configmap is managed with `kubectl` running in a kuberetes job. Similiar to the EKS cluster add-ons, the kubernetes job will not run until at least one compute node is joined to the cluster.
+## Considerations
+
+The `aws-auth` configmap is automatically created on a new AWS EKS cluster when node groups or fargate profiles are joined. This is problematic because terraform resources cannot partily manage configmaps.
+
+The [terraform-aws-eks module](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v18.11.0/examples/complete/main.tf#L323-L336) examples get around this by using the [local-exec povisioner](https://www.terraform.io/language/resources/provisioners/local-exec) to patch the configmap. This requires the host to have `kubectl` installed; which is often not the case with remote operations in [Terraform Cloud](https://www.terraform.io/cloud-docs/run#remote-operations) and CI/CD pipelines.
+
+This module improves on this approach by executing `kubectl` commands with a [kuberetes job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1). The job will either replace the `aws-auth` with new configmap managed with terraform or it will patch in-place.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 
 # Usage
 
-The roles, users, and accounts will be added to the `aws-auth` configmap and will be managed with Terraform.
+The roles, users, and accounts will be merged with a new `aws-auth` configmap managed with Terraform state.
 
 ```hcl
 module "eks" {
@@ -57,7 +63,7 @@ Please see [examples/complete](examples/complete) for more information.
 
 ## Patch ConfigMap
 
-The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform.
+The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform state.
 
 ```hcl
 module "eks" {

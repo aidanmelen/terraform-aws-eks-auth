@@ -3,7 +3,7 @@ content: |-
 
   # Basic Example
 
-  The `aws-auth` configmap will be replaced with a new configmap managed by Terraform.
+  The roles, users, and accounts will be merged with a new `aws-auth` configmap managed with Terraform state.
 
   ```hcl
   {{ include "main.tf" }}

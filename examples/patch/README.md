@@ -3,7 +3,7 @@
 
 # Patch Example
 
-The aws-auth configmap will be patched in-place with additional roles, users, and accounts.
+The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform state.
 
 ```hcl
 module "eks_auth" {
