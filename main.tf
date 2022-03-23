@@ -13,7 +13,6 @@ locals {
   )
 }
 
-
 resource "kubectl_manifest" "patch" {
   override_namespace = "kube-system"
   yaml_body          = local.aws_auth_configmap_yaml
