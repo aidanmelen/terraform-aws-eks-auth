@@ -3,24 +3,6 @@ variable "eks" {
   type        = any
 }
 
-variable "image_name" {
-  description = "Docker image name for the aws-auth-init job. The image must have the `kubectl` command line interface installed."
-  type        = string
-  default     = "bitnami/kubectl"
-}
-
-variable "image_tag" {
-  description = "Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21)."
-  type        = string
-  default     = null
-}
-
-variable "k8s_additional_labels" {
-  description = "Additional kubernetes labels."
-  default     = {}
-  type        = map(string)
-}
-
 variable "map_accounts" {
   description = "Additional AWS account numbers to add to the aws-auth configmap."
   type        = list(string)
@@ -45,10 +27,4 @@ variable "map_users" {
     groups   = list(string)
   }))
   default = []
-}
-
-variable "patch" {
-  description = "Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts."
-  type        = bool
-  default     = false
 }
