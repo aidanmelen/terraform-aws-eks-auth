@@ -8,11 +8,15 @@ A Terraform module to manage [cluster authentication](https://docs.aws.amazon.co
 
 ## Considerations
 
-The `aws-auth` configmap is automatically created on a new AWS EKS cluster when node groups or fargate profiles are joined. This is problematic because terraform resources cannot partily manage configmaps.
+The `aws-auth` configmap is automatically created on AWS EKS when managed node groups or fargate profiles join the cluster. This is problematic because a terraform resources are not designed to partially manage objects.
 
-The [terraform-aws-eks module examples](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v18.11.0/examples/complete/main.tf#L323-L336) get around this by using the `local-exec` povisioner to patch `aws-auth` the configmap. This requires the host to have `kubectl` installed; which is often not the case with remote operations in [Terraform Cloud](https://www.terraform.io/cloud-docs/run#remote-operations) and CI/CD pipelines.
+The [terraform-aws-eks examples](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v18.11.0/examples/complete/main.tf#L323-L336) get around this by using the `local-exec` povisioner to patch `aws-auth` the configmap. This requires the host to have `kubectl` installed; which is often not the case with remote operations in [Terraform Cloud](https://www.terraform.io/cloud-docs/run#remote-operations) and CI/CD pipelines.
 
-This module improves on this approach by executing `kubectl` commands with a [kubernetes job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1). By default, the job will replace the `aws-auth` configmap with a new configmap managed in Terraform state.
+This module improves on this approach by executing `kubectl` commands from a [kubernetes job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1). By default, the job will replace the `aws-auth` configmap with a new configmap managed in Terraform state.
+
+## Assumptions
+
+- You are using the [terraform-aws-eks](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest) module.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
@@ -59,7 +63,7 @@ module "eks_auth" {
 }
 ```
 
-Please see [examples/complete](examples/complete) for more information.
+Please see the [complete example](examples/complete) for more information.
 
 ## Patch ConfigMap
 
@@ -78,7 +82,7 @@ module "eks_auth" {
 }
 ```
 
-Please see [examples/patch](examples/patch) for more information.
+Please see the [patch example](examples/patch) for more information.
 
 ## Requirements
 
@@ -104,18 +108,18 @@ No modules.
 | Name | Type |
 |------|------|
 | [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
-| [kubernetes_job_v1.aws_auth_init_patch](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
-| [kubernetes_job_v1.aws_auth_init_replace](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
-| [kubernetes_role_binding_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
-| [kubernetes_role_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
-| [kubernetes_service_account_v1.aws_auth_init](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |
+| [kubernetes_job_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
+| [kubernetes_job_v1.aws_auth_patch](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
+| [kubernetes_role_binding_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
+| [kubernetes_role_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
+| [kubernetes_service_account_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |
 | [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_eks"></a> [eks](#input\_eks) | The outputs from the `terraform-aws-eks` module. | `any` | n/a | yes |
+| <a name="input_eks"></a> [eks](#input\_eks) | The outputs from the `terraform-aws-modules/terraform-aws-eks` module. | `any` | n/a | yes |
 | <a name="input_image_name"></a> [image\_name](#input\_image\_name) | Docker image name for the aws-auth-init job. The image must have the `kubectl` command line interface installed. | `string` | `"bitnami/kubectl"` | no |
 | <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21). | `string` | `null` | no |
 | <a name="input_k8s_additional_labels"></a> [k8s\_additional\_labels](#input\_k8s\_additional\_labels) | Additional kubernetes labels. | `map(string)` | `{}` | no |

@@ -11,6 +11,9 @@ func TestTerraformCompleteExample(t *testing.T) {
 	terraformOptions := &terraform.Options{
 		// website::tag::1:: Set the path to the Terraform code that will be tested.
 		TerraformDir: "../examples/complete",
+
+		// Disable colors in Terraform commands so its easier to parse stdout/stderr
+		NoColor: true,
 	}
 
 	// website::tag::4:: Clean up resources with "terraform destroy" at the end of the test.
@@ -42,4 +45,7 @@ func TestTerraformCompleteExample(t *testing.T) {
 	assert.Equal(t, expectedMapRoles, outputMapRoles, "Map %q should match %q", expectedMapRoles, expectedMapRoles)
 	assert.Equal(t, expectedMapUsers, outputMapUsers, "Map %q should match %q", expectedMapUsers, outputMapUsers)
 	assert.Equal(t, expectedMapAccounts, outputMapAccounts, "Map %q should match %q", expectedMapAccounts, outputMapAccounts)
+
+	// website::tag::4:: Run a second "terraform apply". Fail the test if results have changes
+	terraform.ApplyAndIdempotent(t, terraformOptions)
 }

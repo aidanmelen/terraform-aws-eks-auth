@@ -1,5 +1,5 @@
 variable "eks" {
-  description = "The outputs from the `terraform-aws-eks` module."
+  description = "The outputs from the `terraform-aws-modules/terraform-aws-eks` module."
   type        = any
 }
 

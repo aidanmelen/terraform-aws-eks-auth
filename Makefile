@@ -25,12 +25,10 @@ install: ## Install project
 	# terratest
 	go get github.com/gruntwork-io/terratest/modules/terraform
 	go mod init test/terraform_basic_test.go
-	go mod tidy
 
 	# pre-commit
 	git init
 	git add -A
-	tflint --init
 	pre-commit install
 
 lint:  ## Lint with pre-commit
@@ -41,13 +39,13 @@ lint:  ## Lint with pre-commit
 tests: test-basic test-complete test-patch ## Test with Terratest
 
 test-basic:  ## Test Basic Example
-	go test test/terraform_basic_test.go -timeout 45m -v
+	go test test/terraform_basic_test.go -timeout 45m -v |& tee test/terraform_basic_test.log
 
 test-complete: ## Test Complete Example
-	go test test/terraform_complete_test.go -timeout 45m -v
+	go test test/terraform_complete_test.go -timeout 45m -v |& tee test/terraform_complete_test.log
 
 test-patch: ## Test Patch Example
-	go test test/terraform_patch_test.go -timeout 45m -v
+	go test test/terraform_patch_test.go -timeout 45m -v |& tee test/terraform_patch_test.log
 
 clean: ## Clean project
 	@rm -f .terraform.lock.hcl
