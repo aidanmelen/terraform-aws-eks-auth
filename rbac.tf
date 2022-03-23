@@ -23,6 +23,16 @@ resource "kubernetes_role_v1" "aws_auth" {
       "delete", # is used when replacing the pre-existing configmap with another managed with terraform
     ]
   }
+
+  # https://stackoverflow.com/a/65203104/3894599
+  rule {
+    api_groups = [""]
+    resources  = ["configmaps"]
+    verbs = [
+      "create", # create on patch if aws-auth configmap doesn't exist.
+    ]
+  }
+
 }
 
 resource "kubernetes_role_binding_v1" "aws_auth" {

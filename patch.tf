@@ -13,9 +13,16 @@ resource "kubernetes_job_v1" "aws_auth_patch" {
       spec {
         service_account_name = kubernetes_service_account_v1.aws_auth.metadata[0].name
         container {
-          name    = "aws-auth-patch"
-          image   = local.aws_auth_image
-          command = ["/bin/sh", "-c", "kubectl patch configmap/aws-auth --patch \"${local.aws_auth_configmap_yaml}\" -n kube-system"]
+          name  = "aws-auth-patch"
+          image = local.aws_auth_image
+          command = [
+            "/bin/sh", "-c",
+            (
+              local.does_aws_auth_configmap_exist
+              ? "kubectl patch configmap/aws-auth --patch \"${local.aws_auth_configmap_yaml}\" -n kube-system"
+              : "echo \"${local.aws_auth_configmap_yaml}\" | kubectl create -f - -n kube-system"
+            )
+          ]
         }
         restart_policy = "Never"
       }

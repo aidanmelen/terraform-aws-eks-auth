@@ -1,38 +1,3 @@
-data "aws_eks_cluster" "cluster" {
-  count = var.image_tag == null ? 1 : 0
-  name  = var.eks.cluster_id
-}
-
-locals {
-  merged_map_roles = distinct(concat(
-    try(yamldecode(yamldecode(var.eks.aws_auth_configmap_yaml).data.mapRoles), []),
-    var.map_roles,
-  ))
-
-  aws_auth_configmap_yaml = templatefile("${path.module}/templates/aws_auth_cm.tpl",
-    {
-      map_roles    = local.merged_map_roles
-      map_users    = var.map_users
-      map_accounts = var.map_accounts
-    }
-  )
-
-  aws_auth_image = join(":", [
-    var.image_name,
-    var.image_tag == null ? data.aws_eks_cluster.cluster[0].version : var.image_tag
-  ])
-
-  k8s_labels = merge(
-    {
-      "app.kubernetes.io/managed-by" = "Terraform"
-      # / are replaced by . because label validator fails in this lib
-      # https://github.com/kubernetes/apimachinery/blob/1bdd76d09076d4dc0362456e59c8f551f5f24a72/pkg/util/validation/validation.go#L166
-      "terraform.io/module" = "aidanmelen.eks-auth.aws"
-    },
-    var.k8s_additional_labels
-  )
-}
-
 resource "kubernetes_job_v1" "aws_auth" {
   count = var.patch == false ? 1 : 0
 
@@ -50,7 +15,7 @@ resource "kubernetes_job_v1" "aws_auth" {
         container {
           name    = "terraform-eks-auth-aws"
           image   = local.aws_auth_image
-          command = ["/bin/sh", "-c", "kubectl delete configmap/aws-auth -n kube-system"]
+          command = ["/bin/sh", "-c", "kubectl delete configmap/aws-auth --ignore-not-found -n kube-system"]
         }
         restart_policy = "Never"
       }
