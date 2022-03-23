@@ -20,7 +20,6 @@ install: ## Install project
 	terraform init
 	cd examples/basic && terraform init
 	cd examples/complete && terraform init
-	cd examples/patch && terraform init
 
 	# terratest
 	go get github.com/gruntwork-io/terratest/modules/terraform
@@ -36,7 +35,7 @@ lint:  ## Lint with pre-commit
 	pre-commit run
 	git add -A
 
-tests: test-basic test-complete test-patch ## Test with Terratest
+tests: test-basic test-complete ## Test with Terratest
 
 test-basic:  ## Test Basic Example
 	go test test/terraform_basic_test.go -timeout 45m -v |& tee test/terraform_basic_test.log
@@ -44,19 +43,14 @@ test-basic:  ## Test Basic Example
 test-complete: ## Test Complete Example
 	go test test/terraform_complete_test.go -timeout 45m -v |& tee test/terraform_complete_test.log
 
-test-patch: ## Test Patch Example
-	go test test/terraform_patch_test.go -timeout 45m -v |& tee test/terraform_patch_test.log
-
 clean: ## Clean project
 	@rm -f .terraform.lock.hcl
 	@rm -f examples/basic/.terraform.lock.hcl
 	@rm -f examples/complete/.terraform.lock.hcl
-	@rm -f examples/patch/.terraform.lock.hcl
 
 	@rm -rf .terraform
 	@rm -rf examples/basic/.terraform
 	@rm -rf examples/complete/.terraform
-	@rm -rf examples/patch/.terraform
 
 	@rm -f go.mod
 	@rm -f go.sum

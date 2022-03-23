@@ -11,14 +11,6 @@ content: |-
 
   Please see the [complete example](examples/complete) for more information.
 
-  ## Patch ConfigMap
-
-  The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform state.
-
-  ```hcl
-  {{ include "examples/patch/patch.tf.docs" }}
-  ```
-
   Please see the [patch example](examples/patch) for more information.
 
   {{ .Requirements }}

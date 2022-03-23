@@ -65,23 +65,6 @@ module "eks_auth" {
 
 Please see the [complete example](examples/complete) for more information.
 
-## Patch ConfigMap
-
-The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform state.
-
-```hcl
-module "eks" {
-  source = "terraform-aws-modules/eks/aws"
-  # insert the 15 required variables here
-}
-
-module "eks_auth" {
-  source = "aidanmelen/eks-auth/aws"
-  eks    = module.eks
-  patch  = true
-}
-```
-
 Please see the [patch example](examples/patch) for more information.
 
 ## Requirements
@@ -89,15 +72,13 @@ Please see the [patch example](examples/patch) for more information.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72 |
-| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.7.0 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.13.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.72 |
-| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.7.0 |
+| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.13.1 |
 
 ## Modules
 
@@ -107,27 +88,16 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
-| [kubernetes_job_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
-| [kubernetes_job_v1.aws_auth_patch](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1) | resource |
-| [kubernetes_role_binding_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_binding_v1) | resource |
-| [kubernetes_role_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/role_v1) | resource |
-| [kubernetes_service_account_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/service_account_v1) | resource |
-| [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/eks_cluster) | data source |
-| [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/data-sources/config_map_v1) | data source |
+| [kubectl_manifest.patch](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_eks"></a> [eks](#input\_eks) | The outputs from the `terraform-aws-modules/terraform-aws-eks` module. | `any` | n/a | yes |
-| <a name="input_image_name"></a> [image\_name](#input\_image\_name) | Docker image name for the aws-auth-init job. The image must have the `kubectl` command line interface installed. | `string` | `"bitnami/kubectl"` | no |
-| <a name="input_image_tag"></a> [image\_tag](#input\_image\_tag) | Docker image tag for the aws-auth-init job. Defaults to the EKS cluster `<major>.<minor>` version (i.e.: 1.21). | `string` | `null` | no |
-| <a name="input_k8s_additional_labels"></a> [k8s\_additional\_labels](#input\_k8s\_additional\_labels) | Additional kubernetes labels. | `map(string)` | `{}` | no |
 | <a name="input_map_accounts"></a> [map\_accounts](#input\_map\_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(string)` | `[]` | no |
 | <a name="input_map_roles"></a> [map\_roles](#input\_map\_roles) | Additional IAM roles to add to the aws-auth configmap. | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_users"></a> [map\_users](#input\_map\_users) | Additional IAM users to add to the aws-auth configmap. | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
-| <a name="input_patch"></a> [patch](#input\_patch) | Determines whether to patch the aws-auth configmap in-place with additional roles, users, and accounts. | `bool` | `false` | no |
 
 ## Outputs
 

@@ -4,8 +4,8 @@ module "eks" {
 
 
 module "eks_auth" {
-  source    = "../../"
-  eks       = module.eks
+  source = "../../"
+  eks    = module.eks
 
   map_roles = [
     {
