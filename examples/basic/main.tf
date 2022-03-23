@@ -18,8 +18,4 @@ module "eks" {
 module "eks_auth" {
   source = "../../"
   eks    = module.eks
-
-  providers = {
-    kubernetes = kubernetes.sandbox_kubernetes
-  }
 }
