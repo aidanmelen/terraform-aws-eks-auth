@@ -57,8 +57,6 @@ module "eks_auth" {
 
 Please see the [complete example](examples/complete) for more information.
 
-Please see the [patch example](examples/patch) for more information.
-
 ## Requirements
 
 | Name | Version |
