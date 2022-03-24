@@ -6,20 +6,12 @@ content: |-
   The roles, users, and accounts will be merged with the cluster roles and added to a new `aws-auth` configmap managed with Terraform state.
 
   ```hcl
-  {{ include ".tfdocs.d/complete.tf.txt" }}
+  {{ include "examples/complete/complete.tf.docs" }}
   ```
 
-  Please see [examples/complete](examples/complete) for more information.
+  Please see the [complete example](examples/complete) for more information.
 
-  ## Patch ConfigMap
-
-  The aws-auth configmap will be patched in-place with `kubectl` and will not be managed with Terraform state.
-
-  ```hcl
-  {{ include ".tfdocs.d/patch.tf.txt" }}
-  ```
-
-  Please see [examples/patch](examples/patch) for more information.
+  Please see the [patch example](examples/patch) for more information.
 
   {{ .Requirements }}
 
