@@ -23,18 +23,18 @@ module "eks_auth" {
     },
   ]
 
-  map_users = [
-    {
-      userarn  = "arn:aws:iam::66666666666:user/user1"
-      username = "user1"
-      groups   = ["system:masters"]
-    },
-    # {
-    #   userarn  = "arn:aws:iam::66666666666:user/user2"
-    #   username = "user2"
-    #   groups   = ["system:masters"]
-    # },
-  ]
+  # map_users = [
+  #   {
+  #     userarn  = "arn:aws:iam::66666666666:user/user1"
+  #     username = "user1"
+  #     groups   = ["system:masters"]
+  #   },
+  #   {
+  #     userarn  = "arn:aws:iam::66666666666:user/user2"
+  #     username = "user2"
+  #     groups   = ["system:masters"]
+  #   },
+  # ]
 
   # map_accounts = [
   #   "777777777777",
@@ -50,18 +50,12 @@ module "eks_auth" {
 1. Run `terraform apply`.
 1. When you're done, run `terraform destroy`.
 
-## Running automated tests against this module
-
-1. Install [Terraform](https://www.terraform.io/) and make sure it's on your `PATH`.
-1. Install [Golang](https://golang.org/) and make sure this code is checked out into your `GOPATH`.
-1. `cd test`
-1. `go test terraform_basic_test.go -v`
-
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.13.1 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 1.11.1 |
 
 ## Providers

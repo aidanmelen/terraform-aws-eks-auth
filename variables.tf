@@ -3,6 +3,12 @@ variable "eks" {
   type        = any
 }
 
+variable "wait_for_cluster_timeout" {
+  description = "A timeout (in seconds) to wait for cluster to be available."
+  type        = number
+  default     = 300
+}
+
 variable "map_accounts" {
   description = "Additional AWS account numbers to add to the aws-auth configmap."
   type        = list(string)

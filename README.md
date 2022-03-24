@@ -72,12 +72,14 @@ Please see the [patch example](examples/patch) for more information.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
+| <a name="requirement_http"></a> [http](#requirement\_http) | >= 2.4.1 |
 | <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.13.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
+| <a name="provider_http"></a> [http](#provider\_http) | >= 2.4.1 |
 | <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.13.1 |
 
 ## Modules
@@ -88,7 +90,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [kubectl_manifest.patch](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
+| [kubectl_manifest.aws_auth](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
+| [http_http.wait_for_cluster](https://registry.terraform.io/providers/terraform-aws-modules/http/latest/docs/data-sources/http) | data source |
 
 ## Inputs
 
@@ -98,6 +101,7 @@ No modules.
 | <a name="input_map_accounts"></a> [map\_accounts](#input\_map\_accounts) | Additional AWS account numbers to add to the aws-auth configmap. | `list(string)` | `[]` | no |
 | <a name="input_map_roles"></a> [map\_roles](#input\_map\_roles) | Additional IAM roles to add to the aws-auth configmap. | <pre>list(object({<br>    rolearn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
 | <a name="input_map_users"></a> [map\_users](#input\_map\_users) | Additional IAM users to add to the aws-auth configmap. | <pre>list(object({<br>    userarn  = string<br>    username = string<br>    groups   = list(string)<br>  }))</pre> | `[]` | no |
+| <a name="input_wait_for_cluster_timeout"></a> [wait\_for\_cluster\_timeout](#input\_wait\_for\_cluster\_timeout) | A timeout (in seconds) to wait for cluster to be available. | `number` | `300` | no |
 
 ## Outputs
 
@@ -105,7 +109,7 @@ No modules.
 |------|-------------|
 | <a name="output_aws_auth_configmap_yaml"></a> [aws\_auth\_configmap\_yaml](#output\_aws\_auth\_configmap\_yaml) | Formatted yaml output for aws-auth configmap. |
 | <a name="output_map_accounts"></a> [map\_accounts](#output\_map\_accounts) | The aws-auth map accounts. |
-| <a name="output_map_roles"></a> [map\_roles](#output\_map\_roles) | The aws-auth map roles merged with the eks cluster node group and fargate profile roles. |
+| <a name="output_map_roles"></a> [map\_roles](#output\_map\_roles) | The aws-auth map roles merged with the eks managed node group, self managed node groups and fargate profile roles. |
 | <a name="output_map_users"></a> [map\_users](#output\_map\_users) | The aws-auth map users. |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

@@ -9,7 +9,7 @@ output "map_accounts" {
 }
 
 output "map_roles" {
-  description = "The aws-auth map roles merged with the eks cluster node group and fargate profile roles."
+  description = "The aws-auth map roles merged with the eks managed node group, self managed node groups and fargate profile roles."
   value       = local.merged_map_roles
 }
 
