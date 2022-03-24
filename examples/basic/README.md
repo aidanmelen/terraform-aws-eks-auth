@@ -3,7 +3,7 @@
 
 # Basic Example
 
-The roles, users, and accounts will be merged with the cluster roles and added to a new `aws-auth` configmap managed with Terraform state.
+The EKS cluster will automatically add managed node group and fargate profile roles to the `aws-auth` configmap. We can add `map_roles`, `map_user` and `map_accounts` anytime.
 
 ```hcl
 locals {
