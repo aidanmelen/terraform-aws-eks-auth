@@ -6,14 +6,6 @@
 
 A Terraform module to manage [cluster authentication](https://docs.aws.amazon.com/eks/latest/userguide/cluster-auth.html) for an Elastic Kubernetes (EKS) cluster on AWS.
 
-## Considerations
-
-The `aws-auth` configmap is automatically created on AWS EKS when managed node groups or fargate profiles join the cluster. This is problematic because a terraform resources are not designed to partially manage objects.
-
-The [terraform-aws-eks examples](https://github.com/terraform-aws-modules/terraform-aws-eks/blob/v18.11.0/examples/complete/main.tf#L323-L336) get around this by using the `local-exec` povisioner to patch `aws-auth` the configmap. This requires the host to have `kubectl` installed; which is often not the case with remote operations in [Terraform Cloud](https://www.terraform.io/cloud-docs/run#remote-operations) and CI/CD pipelines.
-
-This module improves on this approach by executing `kubectl` commands from a [kubernetes job](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/job_v1). By default, the job will replace the `aws-auth` configmap with a new configmap managed in Terraform state.
-
 ## Assumptions
 
 - You are using the [terraform-aws-eks](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest) module.
