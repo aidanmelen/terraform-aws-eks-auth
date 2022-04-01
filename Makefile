@@ -13,13 +13,14 @@ build: ## Build docker dev container
 	cd .devcontainer && docker build -f Dockerfile . -t $(NAME)
 
 run: ## Run docker dev container
-	docker run -it --rm -v "$$(pwd)":/workspaces/$(NAME) -v ~/.aws:/root/.aws -v ~/.kube:/root/.kube -v ~/.cache/pre-commit:/root/.cache/pre-commit --workdir /workspaces/$(NAME) $(NAME) /bin/bash
+	docker run -it --rm -v "$$(pwd)":/workspaces/$(NAME) -v ~/.aws:/root/.aws -v ~/.kube:/root/.kube -v ~/.cache/pre-commit:/root/.cache/pre-commit -v ~/.terraform.d/plugins:/root/.terraform.d/plugins --workdir /workspaces/$(NAME) $(NAME) /bin/bash
 
 install: ## Install project
 	# terraform
 	terraform init
 	cd examples/basic && terraform init
 	cd examples/complete && terraform init
+	cd test/mock && terraform init
 
 	# terratest
 	go get github.com/gruntwork-io/terratest/modules/terraform
@@ -47,10 +48,12 @@ clean: ## Clean project
 	@rm -f .terraform.lock.hcl
 	@rm -f examples/basic/.terraform.lock.hcl
 	@rm -f examples/complete/.terraform.lock.hcl
+	@rm -f test/mock/.terraform.lock.hcl
 
 	@rm -rf .terraform
 	@rm -rf examples/basic/.terraform
 	@rm -rf examples/complete/.terraform
+	@rm -rf test/mock/.terraform
 
 	@rm -f go.mod
 	@rm -f go.sum
