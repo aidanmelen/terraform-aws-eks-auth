@@ -1,3 +1,8 @@
+output "aws_auth_configmap_yaml" {
+  description = "Formatted yaml output for aws-auth configmap."
+  value       = local.aws_auth_configmap_yaml
+}
+
 output "map_accounts" {
   description = "The aws-auth map accounts."
   value       = var.map_accounts
