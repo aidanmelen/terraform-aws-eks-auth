@@ -34,3 +34,9 @@ variable "map_users" {
   }))
   default = []
 }
+
+variable "cluster_ca_certificate" {
+  description = "base64 encoded certificate data required to communicate with the cluster"
+  type        = string
+  default     = ""
+}
