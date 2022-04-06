@@ -15,7 +15,12 @@ locals {
 
 data "http" "wait_for_cluster" {
   url            = format("%s/healthz", var.eks.cluster_endpoint)
-  ca_certificate = base64decode(var.eks.cluster_certificate_authority_data)
+  ca_certificate = base64decode(
+    coalesce(
+      var.cluster_ca_certificate,
+      var.eks.cluster_certificate_authority_data
+    )
+  )
   timeout        = var.wait_for_cluster_timeout
 }
 
