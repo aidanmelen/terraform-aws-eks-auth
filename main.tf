@@ -1,4 +1,7 @@
 locals {
+  create_aws_auth_configmap = length(var.eks.eks_managed_node_groups) == 0 && length(var.eks.fargate_profiles) == 0
+  patch_aws_auth_configmap  = !local.create_aws_auth_configmap
+
   merged_map_roles = distinct(concat(
     try(yamldecode(yamldecode(var.eks.aws_auth_configmap_yaml).data.mapRoles), []),
     var.map_roles,
@@ -19,14 +22,37 @@ data "http" "wait_for_cluster" {
   timeout        = var.wait_for_cluster_timeout
 }
 
-resource "kubectl_manifest" "aws_auth" {
+resource "kubernetes_config_map_v1" "aws_auth" {
+  count      = local.create_aws_auth_configmap ? 1 : 0
   depends_on = [data.http.wait_for_cluster]
 
-  # A conflict will occur when map_roles are added before a node group or fargate profile is joined with the cluster
-  # This resource does not yet support `--force-conflicts` so replacing the `aws-auth` configmap when change occur prevents a conflict
-  # https://github.com/gavinbunney/terraform-provider-kubectl/issues/139#issuecomment-1077049925
-  force_new = true
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
 
-  override_namespace = "kube-system"
-  yaml_body          = local.aws_auth_configmap_yaml
+  data = {
+    "mapRoles"    = yamlencode(local.merged_map_roles)
+    "mapUsers"    = yamlencode(var.map_users)
+    "mapAccounts" = yamlencode(var.map_accounts)
+  }
+}
+
+
+resource "kubernetes_config_map_v1_data" "aws_auth" {
+  count      = local.patch_aws_auth_configmap ? 1 : 0
+  depends_on = [data.http.wait_for_cluster]
+
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    "mapRoles"    = yamlencode(local.merged_map_roles)
+    "mapUsers"    = yamlencode(var.map_users)
+    "mapAccounts" = yamlencode(var.map_accounts)
+  }
+
+  force = true
 }

@@ -15,7 +15,7 @@ A Terraform module to manage [cluster authentication](https://docs.aws.amazon.co
 
 ## Usage
 
-The `map_roles`, `map_users`, and `map_accounts` will be merged with the managed node group and fargate profile roles and added to the `aws-auth` configmap.
+Grant access to the AWS EKS cluster by adding `map_roles`, `map_user` or `map_accounts` to the `aws-auth` configmap.
 
 ```hcl
 module "eks" {
@@ -61,16 +61,16 @@ Please see the [complete example](examples/complete) for more information.
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.8 |
 | <a name="requirement_http"></a> [http](#requirement\_http) | >= 2.4.1 |
-| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | >= 1.13.1 |
+| <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | >= 2.10.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_http"></a> [http](#provider\_http) | >= 2.4.1 |
-| <a name="provider_kubectl"></a> [kubectl](#provider\_kubectl) | >= 1.13.1 |
+| <a name="provider_kubernetes"></a> [kubernetes](#provider\_kubernetes) | >= 2.10.0 |
 
 ## Modules
 
@@ -80,7 +80,8 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [kubectl_manifest.aws_auth](https://registry.terraform.io/providers/gavinbunney/kubectl/latest/docs/resources/manifest) | resource |
+| [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
+| [kubernetes_config_map_v1_data.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1_data) | resource |
 | [http_http.wait_for_cluster](https://registry.terraform.io/providers/terraform-aws-modules/http/latest/docs/data-sources/http) | data source |
 
 ## Inputs

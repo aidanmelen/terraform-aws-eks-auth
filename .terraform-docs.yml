@@ -3,7 +3,7 @@ content: |-
 
   ## Usage
 
-  The `map_roles`, `map_users`, and `map_accounts` will be merged with the managed node group and fargate profile roles and added to the `aws-auth` configmap.
+  Grant access to the AWS EKS cluster by adding `map_roles`, `map_user` or `map_accounts` to the `aws-auth` configmap.
 
   ```hcl
   {{ include "examples/complete/complete.tf.docs" }}
