@@ -5,7 +5,7 @@
 
 Grant access to the AWS EKS cluster by creating a new `aws-auth` configmap with the `map_roles`, `map_user` and `map_accounts`.
 
-ℹ️ An AWS EKS cluster without managed node groups or fargate profiles will not automatically create the `aws-auth` configmap.
+ℹ️ An AWS EKS cluster without managed node groups or fargate profiles will not automatically create the `aws-auth` configmap. So this module will create a new configmap with terraform.
 
 ```hcl
 locals {

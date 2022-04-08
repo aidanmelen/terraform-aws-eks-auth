@@ -20,7 +20,6 @@ install: ## Install project
 	terraform init
 	cd examples/basic && terraform init
 	cd examples/complete && terraform init
-	cd test/mock && terraform init
 
 	# terratest
 	go get github.com/gruntwork-io/terratest/modules/terraform
@@ -48,12 +47,10 @@ clean: ## Clean project
 	@rm -f .terraform.lock.hcl
 	@rm -f examples/basic/.terraform.lock.hcl
 	@rm -f examples/complete/.terraform.lock.hcl
-	@rm -f test/mock/.terraform.lock.hcl
 
 	@rm -rf .terraform
 	@rm -rf examples/basic/.terraform
 	@rm -rf examples/complete/.terraform
-	@rm -rf test/mock/.terraform
 
 	@rm -f go.mod
 	@rm -f go.sum

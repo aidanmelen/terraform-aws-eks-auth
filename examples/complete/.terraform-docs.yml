@@ -5,7 +5,7 @@ content: |-
 
   Grant access to the AWS EKS cluster by patching the already existing `aws-auth` configmap with the `map_roles`, `map_user` and `map_accounts`.
 
-  ℹ️ The `aws-auth` configmap will already exist when the AWS EKS cluster is created with managed node groups or fargate profiles.
+  ℹ️ The `aws-auth` configmap will already exist when the AWS EKS cluster is created with managed node groups or fargate profiles. So this module will patch the configmap with terraform.
 
   ```hcl
   {{ include "main.tf" }}
