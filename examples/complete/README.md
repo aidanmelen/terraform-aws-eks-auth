@@ -3,9 +3,49 @@
 
 # Complete Example
 
-The `map_roles`, `map_users`, and `map_accounts` will be merged with the managed node group and fargate profile roles and added to the `aws-auth` configmap.
+Grant access to the AWS EKS cluster by patching the already existing `aws-auth` configmap with the `map_roles`, `map_user` and `map_accounts`.
+
+ℹ️ The `aws-auth` configmap will already exist when the AWS EKS cluster is created with managed node groups or fargate profiles.
 
 ```hcl
+locals {
+  name = "ex-${replace(basename(path.cwd), "_", "-")}"
+}
+
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = ">= 18.0.0"
+
+  cluster_name    = local.name
+  cluster_version = "1.21"
+
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+
+  self_managed_node_groups = {
+    boo = {
+      instance_type = "t3.medium"
+      instance_market_options = {
+        market_type = "spot"
+      }
+    }
+  }
+
+  eks_managed_node_groups = {
+    foo = {}
+  }
+
+  fargate_profiles = {
+    bar = {
+      selectors = [
+        {
+          namespace = "bar"
+        }
+      ]
+    }
+  }
+}
+
 module "eks_auth" {
   source = "../../"
   eks    = module.eks

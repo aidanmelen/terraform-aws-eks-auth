@@ -34,9 +34,3 @@ variable "map_users" {
   }))
   default = []
 }
-
-# variable "k8s_additional_labels" {
-#   description = "Additional kubernetes labels."
-#   default     = {}
-#   type        = map(string)
-# }

@@ -15,7 +15,7 @@ A Terraform module to manage [cluster authentication](https://docs.aws.amazon.co
 
 ## Usage
 
-The `map_roles`, `map_users`, and `map_accounts` will be merged with the managed node group and fargate profile roles and added to the `aws-auth` configmap.
+Grant access to the AWS EKS cluster by adding `map_roles`, `map_user` or `map_accounts` to the `aws-auth` configmap.
 
 ```hcl
 module "eks" {
@@ -80,6 +80,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [kubernetes_config_map_v1.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1) | resource |
 | [kubernetes_config_map_v1_data.aws_auth](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs/resources/config_map_v1_data) | resource |
 | [http_http.wait_for_cluster](https://registry.terraform.io/providers/terraform-aws-modules/http/latest/docs/data-sources/http) | data source |
 

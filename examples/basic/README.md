@@ -3,7 +3,9 @@
 
 # Basic Example
 
-The EKS cluster will automatically add managed node group and fargate profile roles to the `aws-auth` configmap. We can add `map_roles`, `map_user` and `map_accounts` anytime.
+Grant access to the AWS EKS cluster by creating a new `aws-auth` configmap with the `map_roles`, `map_user` and `map_accounts`.
+
+ℹ️ An AWS EKS cluster without managed node groups or fargate profiles will not automatically create the `aws-auth` configmap.
 
 ```hcl
 locals {
@@ -17,15 +19,37 @@ module "eks" {
   cluster_name = local.name
   vpc_id       = module.vpc.vpc_id
   subnet_ids   = module.vpc.private_subnets
-
-  eks_managed_node_groups = {
-    foo = {}
-  }
 }
 
 module "eks_auth" {
   source = "../../"
   eks    = module.eks
+
+  map_roles = [
+    {
+      rolearn  = "arn:aws:iam::66666666666:role/role1"
+      username = "role1"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_users = [
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user1"
+      username = "user1"
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::66666666666:user/user2"
+      username = "user2"
+      groups   = ["system:masters"]
+    },
+  ]
+
+  map_accounts = [
+    "777777777777",
+    "888888888888",
+  ]
 }
 ```
 
@@ -86,5 +110,4 @@ module "eks_auth" {
 | <a name="output_map_accounts"></a> [map\_accounts](#output\_map\_accounts) | The aws-auth map accounts. |
 | <a name="output_map_roles"></a> [map\_roles](#output\_map\_roles) | The aws-auth map roles merged with the eks cluster node group and fargate profile roles. |
 | <a name="output_map_users"></a> [map\_users](#output\_map\_users) | The aws-auth map users. |
-| <a name="output_node_group_iam_role_arn"></a> [node\_group\_iam\_role\_arn](#output\_node\_group\_iam\_role\_arn) | The Amazon Resource Name (ARN) specifying the IAM role for the managed node group |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
