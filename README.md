@@ -14,7 +14,7 @@ I am planning to archive this repo on May 1st, 2022. You are welcome to open an 
   - The `aws-auth` configmap should still exist on the cluster but will no longer be managed by this module.
   - A plan should show that there are no infrastructure changes to the EKS cluster.
 3. Upgrade the version of the EKS module: `version = ">= v18.20.0"`
-4. Configure the `terraform-aws-modules/eks/aws` with `manage_aws_auth_configmap = true`. This version of the EKS module uses the new `kubernetes_config_map_v1_data` resource to patch `aws-auth` data.
+4. Configure the `terraform-aws-modules/eks/aws` with `manage_aws_auth_configmap = true`. This version of the EKS module uses the new `kubernetes_config_map_v1_data` resource to patch `aws-auth` configmap data (just like the v1.0.0 version of this module).
 5. Plan and Apply.
   - The `aws-auth` configmap should now be managed by the EKS module.
 
