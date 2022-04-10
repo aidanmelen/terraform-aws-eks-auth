@@ -1,6 +1,13 @@
-The [`terraform-aws-modules/eks/aws` v.18.20.0 release](https://github.com/terraform-aws-modules/terraform-aws-eks/releases/tag/v18.20.0) has brought back support `aws-auth` configmap! For this reason, I have decided to archive this repo in favor of the offical EKS module.
+# Archive Notice
+
+The [`terraform-aws-modules/eks/aws` v.18.20.0 release](https://github.com/terraform-aws-modules/terraform-aws-eks/releases/tag/v18.20.0) has brought back support `aws-auth` configmap! For this reason, I highly encourage users to manage the `aws-auth` configmap with the EKS module.
+
+I am planning to archive this repo on May 1st, 2022. You are welcome to open an issue here if you are having trouble with the migration steps below and will do my best to help.
+
 
 # Migration Notes:
+
+## steps
 
 1. Remove the `aidanmelen/eks-auth/aws` declaration for your terraform code.
 2. Remove the `aidanmelen/eks-auth/aws` resources from terraform state.
