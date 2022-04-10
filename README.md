@@ -5,7 +5,7 @@ The [`terraform-aws-modules/eks/aws` v.18.20.0 release](https://github.com/terra
 I am planning to archive this repo on May 1st, 2022. You are welcome to open an issue here if you are having trouble with the migration steps below and will do my best to help.
 
 
-# Migration Notes:
+# Migration:
 
 ## steps
 
