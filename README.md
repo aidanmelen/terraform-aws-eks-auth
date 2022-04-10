@@ -1,6 +1,22 @@
+The [`terraform-aws-modules/eks/aws` v.18.20.0 release](https://github.com/terraform-aws-modules/terraform-aws-eks/releases/tag/v18.20.0) has brought back support `aws-auth` configmap! For this reason, I have decided to archive this repo in favor of the offical EKS module.
+
+# Migration Notes:
+
+1. Remove the `aidanmelen/eks-auth/aws` declaration for your terraform code.
+2. Remove the `aidanmelen/eks-auth/aws` resources from terraform state.
+  - The `aws-auth` should no long be managed by this module.
+  - A plan should show that there are no infrastructure changes to the EKS cluster.
+3. Upgrade the version of the EKS module: `version = ">= v18.20.0"`
+4. Configure the `terraform-aws-modules/eks/aws` with `manage_aws_auth_configmap = true`. This version of the EKS module uses the new `kubernetes_config_map_v1_data` resource to patch `aws-auth` data.
+5. Plan and Apply.
+  - The `aws-auth` configmap should now be managed by the EKS module.
+
+Please see the [complete example](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest) for more information.
+
+---
+
 [![Pre-Commit](https://github.com/aidanmelen/terraform-aws-eks-auth/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/aidanmelen/terraform-aws-eks-auth/actions/workflows/pre-commit.yaml)
 [![cookiecutter-tf-module](https://img.shields.io/badge/cookiecutter--tf--module-enabled-brightgreen)](https://github.com/aidanmelen/cookiecutter-tf-module)
-[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
 
 # terraform-aws-eks-auth
 
