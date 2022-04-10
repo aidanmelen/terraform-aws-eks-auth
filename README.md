@@ -11,7 +11,7 @@ I am planning to archive this repo on May 1st, 2022. You are welcome to open an 
 
 1. Remove the `aidanmelen/eks-auth/aws` declaration for your terraform code.
 2. Remove the `aidanmelen/eks-auth/aws` resources from terraform state.
-  - The `aws-auth` should no long be managed by this module.
+  - The `aws-auth` configmap should still exist on the cluster but will no longer be managed by this module.
   - A plan should show that there are no infrastructure changes to the EKS cluster.
 3. Upgrade the version of the EKS module: `version = ">= v18.20.0"`
 4. Configure the `terraform-aws-modules/eks/aws` with `manage_aws_auth_configmap = true`. This version of the EKS module uses the new `kubernetes_config_map_v1_data` resource to patch `aws-auth` data.
