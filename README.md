@@ -2,7 +2,7 @@
 
 The [`terraform-aws-modules/eks/aws` v.18.20.0 release](https://github.com/terraform-aws-modules/terraform-aws-eks/releases/tag/v18.20.0) has brought back support `aws-auth` configmap! For this reason, I highly encourage users to manage the `aws-auth` configmap with the EKS module.
 
-I am planning to archive this repo on May 1st, 2022. You are welcome to open an issue here if you are having trouble with the migration steps below and will do my best to help.
+You are welcome to open an issue here if you are having trouble with the migration steps below and will do my best to help.
 
 
 # Migration:
