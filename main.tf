@@ -22,8 +22,6 @@ data "http" "wait_for_cluster" {
 }
 
 resource "kubernetes_config_map_v1" "aws_auth" {
-  count      = local.create_aws_auth_configmap ? 1 : 0
-  depends_on = [data.http.wait_for_cluster]
 
   metadata {
     name      = "aws-auth"
@@ -39,8 +37,7 @@ resource "kubernetes_config_map_v1" "aws_auth" {
 
 
 resource "kubernetes_config_map_v1_data" "aws_auth" {
-  count      = local.patch_aws_auth_configmap ? 1 : 0
-  depends_on = [data.http.wait_for_cluster]
+
 
   metadata {
     name      = "aws-auth"
