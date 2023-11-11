@@ -1,6 +1,5 @@
 locals {
-  create_aws_auth_configmap = length(var.eks.eks_managed_node_groups) == 0 && length(var.eks.fargate_profiles) == 0
-  patch_aws_auth_configmap  = !local.create_aws_auth_configmap
+
 
   merged_map_roles = distinct(concat(
     try(yamldecode(yamldecode(var.eks.aws_auth_configmap_yaml).data.mapRoles), []),
